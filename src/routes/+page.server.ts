@@ -1,16 +1,16 @@
+import { listAwardBooks } from '#lib/server/books.js';
 import { getDb } from '#lib/server/db.js';
+import { latestRefresh, startRefresh } from '#lib/server/refresh.js';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const lastRefresh =
-		(getDb()
-			.prepare("SELECT finished_at FROM refresh_log WHERE status = 'ok' ORDER BY id DESC LIMIT 1")
-			.pluck()
-			.get() as string | undefined) ?? null;
-	return { books: [], lastRefresh };
+	const db = getDb();
+	return { books: listAwardBooks(db), refresh: latestRefresh(db) };
 };
 
 export const actions: Actions = {
-	// The Wikidata refresh arrives in epic 02.
-	refresh: async () => {}
+	refresh: async () => {
+		const { started } = startRefresh(getDb());
+		return { started };
+	}
 };

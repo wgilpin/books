@@ -2,11 +2,43 @@ import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
 import Page from './+page.svelte';
 
+const page = (data: object) => render(Page, { props: { data } as never }).body;
+
+const book = {
+	title: 'Venomous Lumpsucker',
+	author: 'Ned Beauman',
+	kindleUrl: 'https://www.amazon.co.uk/s?k=Venomous+Lumpsucker+Ned+Beauman&i=digital-text',
+	awards: [{ award: 'Clarke', year: 2023, result: 'won' }]
+};
+
 describe('/ page', () => {
 	it('shows the empty state and a refresh button when there are no books', () => {
-		const { body } = render(Page, { props: { data: { books: [], lastRefresh: null } } as never });
+		const body = page({ books: [], refresh: null });
 		expect(body).toContain('No award data yet');
 		expect(body).toMatch(/<form[^>]*method="POST"[^>]*action="\?\/refresh"/);
 		expect(body).toMatch(/<button[^>]*type="submit"[^>]*>Refresh from Wikidata<\/button>/);
+	});
+
+	it('shows each book with its awards and a Kindle link', () => {
+		const body = page({ books: [book], refresh: { status: 'ok', finishedAt: '2026-10-02 21:00:00', error: null } });
+		expect(body).toContain('Venomous Lumpsucker');
+		expect(body).toContain('Ned Beauman');
+		expect(body).toContain('Clarke 2023 · won');
+		expect(body).toContain(`href="${book.kindleUrl.replaceAll('&', '&amp;')}"`);
+	});
+
+	it('shows that a refresh is running and disables the button', () => {
+		const body = page({ books: [book], refresh: { status: 'running', finishedAt: null, error: null } });
+		expect(body).toContain('Refreshing from Wikidata');
+		expect(body).toMatch(/<button[^>]*disabled/);
+	});
+
+	it('shows the error and the time of a failed refresh', () => {
+		const body = page({
+			books: [book],
+			refresh: { status: 'failed', finishedAt: '2026-10-02 21:05:00', error: 'network down' }
+		});
+		expect(body).toContain('Refresh failed at 2026-10-02 21:05:00: network down');
+		expect(body).toContain('Venomous Lumpsucker');
 	});
 });
