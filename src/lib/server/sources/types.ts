@@ -23,6 +23,14 @@ export interface AliasRecord {
 	alias: string;
 }
 
+export interface SeriesMemberRecord {
+	source: string;
+	seriesSourceId: string;
+	seriesName: string;
+	work: WorkRecord;
+	position: number;
+}
+
 export interface SourceRecords {
 	works: WorkRecord[];
 	awards: AwardRecord[];

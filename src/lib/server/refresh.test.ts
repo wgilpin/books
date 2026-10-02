@@ -1,14 +1,11 @@
-import { readFileSync } from 'node:fs';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { fakeWikidata } from '../../../tests/fake-wikidata';
 import { openDb, type Db } from './db';
 import { latestRefresh, startRefresh } from './refresh';
 
-const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
-const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
 
 // Wikidata is the edge of the system, so tests replace fetch. Nothing calls the real service.
-const okFetch = (async (url: string) =>
-	new Response(decodeURIComponent(url).includes('skos:altLabel') ? aliasFixture : fixture)) as typeof fetch;
+const okFetch = fakeWikidata();
 const failingFetch = (async () => new Response('busy', { status: 503, statusText: 'Service Unavailable' })) as typeof fetch;
 
 const count = (db: Db, table: string) => db.prepare(`SELECT COUNT(*) FROM ${table}`).pluck().get();
@@ -22,9 +19,9 @@ describe('refresh', () => {
 	it('stores the award novels and records a finished refresh', async () => {
 		await startRefresh(db, okFetch).done;
 
-		expect(count(db, 'work')).toBe(36);
+		expect(count(db, 'work')).toBe(42);
 		expect(count(db, 'award_entry')).toBe(45);
-		expect(count(db, 'source_cache')).toBe(2);
+		expect(count(db, 'source_cache')).toBe(4);
 		expect(latestRefresh(db)).toMatchObject({ status: 'ok', error: null });
 	});
 
@@ -38,12 +35,40 @@ describe('refresh', () => {
 		]);
 	});
 
+	it('stores each series with its numbered members as works', async () => {
+		await startRefresh(db, okFetch).done;
+
+		expect(count(db, 'series')).toBe(3);
+		expect(count(db, 'series_entry')).toBe(8);
+		expect(count(db, 'work')).toBe(42);
+		const lockedTomb = db
+			.prepare(
+				`SELECT w.title, e.position FROM series s JOIN series_entry e ON e.series_id = s.id
+				   JOIN work w ON w.id = e.work_id WHERE s.name = 'Locked Tomb series' ORDER BY e.position`
+			)
+			.all();
+		expect(lockedTomb).toEqual([
+			{ title: 'Gideon the Ninth', position: 1 },
+			{ title: 'Harrow the Ninth', position: 2 },
+			{ title: 'Nona the Ninth', position: 3 }
+		]);
+	});
+
+	it('adds no duplicate series, entries or member works when it runs twice', async () => {
+		await startRefresh(db, okFetch).done;
+		await startRefresh(db, okFetch).done;
+
+		expect(count(db, 'series')).toBe(3);
+		expect(count(db, 'series_entry')).toBe(8);
+		expect(count(db, 'work')).toBe(42);
+	});
+
 	it('adds no duplicates when it runs twice', async () => {
 		await startRefresh(db, okFetch).done;
 		const ids = db.prepare('SELECT id FROM work ORDER BY id').pluck().all();
 		await startRefresh(db, okFetch).done;
 
-		expect(count(db, 'work')).toBe(36);
+		expect(count(db, 'work')).toBe(42);
 		expect(count(db, 'award_entry')).toBe(45);
 		expect(db.prepare('SELECT id FROM work ORDER BY id').pluck().all()).toEqual(ids);
 	});
@@ -52,7 +77,7 @@ describe('refresh', () => {
 		await startRefresh(db, okFetch).done;
 		await startRefresh(db, failingFetch).done;
 
-		expect(count(db, 'work')).toBe(36);
+		expect(count(db, 'work')).toBe(42);
 		expect(latestRefresh(db)).toMatchObject({
 			status: 'failed',
 			error: 'Wikidata returned 503 Service Unavailable'
@@ -62,9 +87,9 @@ describe('refresh', () => {
 	it('does not start a second refresh while one is running', async () => {
 		let release!: () => void;
 		const gate = new Promise<void>((resolve) => (release = resolve));
-		const slowFetch = (async (url: string) => {
+		const slowFetch = (async (url: string, init?: RequestInit) => {
 			await gate;
-			return okFetch(url);
+			return okFetch(url, init);
 		}) as typeof fetch;
 
 		const first = startRefresh(db, slowFetch);

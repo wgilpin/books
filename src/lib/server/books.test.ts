@@ -1,14 +1,12 @@
-import { readFileSync } from 'node:fs';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { fakeWikidata } from '../../../tests/fake-wikidata';
 import { listAwardBooks } from './books';
 import { openDb, type Db } from './db';
 import { replaceOwned } from './owned';
 import { startRefresh } from './refresh';
 
-const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
-const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
-const okFetch = (async (url: string) =>
-	new Response(decodeURIComponent(url).includes('skos:altLabel') ? aliasFixture : fixture)) as typeof fetch;
+// Wikidata is the edge of the system, so tests replace fetch. Nothing calls the real service.
+const okFetch = fakeWikidata();
 
 describe('listAwardBooks', () => {
 	let db: Db;

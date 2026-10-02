@@ -1,4 +1,4 @@
-import type { AliasRecord, Award, AwardRecord, SourceRecords, WorkRecord } from './types';
+import type { AliasRecord, Award, AwardRecord, SeriesMemberRecord, SourceRecords, WorkRecord } from './types';
 
 export const SOURCE = 'wikidata';
 
@@ -38,13 +38,42 @@ SELECT DISTINCT ?book ?alias WHERE {
   FILTER(LANG(?alias) IN ("en", "mul"))
 }`;
 
+/** The series that hold an award book. */
+export const SERIES_IDS_QUERY = `
+SELECT DISTINCT ?series WHERE {
+  VALUES ?award { ${awardValues} }
+  { ?book p:P1411/ps:P1411 ?award } UNION { ?book p:P166/ps:P166 ?award }
+  ?book wdt:P179 ?series .
+}`;
+
+/**
+ * Numbered members of the given series. One query for all series together times out on
+ * Wikidata, so the ids come from SERIES_IDS_QUERY first.
+ */
+export const seriesMembersQuery = (ids: string[]) => `
+SELECT ?series ?seriesLabel ?member ?memberLabel ?authorLabel ?ord WHERE {
+  VALUES ?series { ${ids.map((id) => `wd:${id}`).join(' ')} }
+  ?member p:P179 ?st . ?st ps:P179 ?series ; pq:P1545 ?ord .
+  OPTIONAL { ?member wdt:P50 ?author }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
+}`;
+
 export const fetchAwardNovels = (fetchFn: typeof fetch = fetch) => runQuery(AWARD_NOVELS_QUERY, fetchFn);
 export const fetchAliases = (fetchFn: typeof fetch = fetch) => runQuery(ALIASES_QUERY, fetchFn);
+export const fetchSeriesIds = (fetchFn: typeof fetch = fetch) => runQuery(SERIES_IDS_QUERY, fetchFn);
+export const fetchSeriesMembers = (ids: string[], fetchFn: typeof fetch = fetch) =>
+	runQuery(seriesMembersQuery(ids), fetchFn);
 
+/** POST, because a list of series ids makes the query too long for a URL. */
 async function runQuery(query: string, fetchFn: typeof fetch): Promise<string> {
-	const url = `${ENDPOINT}?query=${encodeURIComponent(query)}`;
-	const response = await fetchFn(url, {
-		headers: { Accept: 'application/sparql-results+json', 'User-Agent': USER_AGENT }
+	const response = await fetchFn(ENDPOINT, {
+		method: 'POST',
+		headers: {
+			Accept: 'application/sparql-results+json',
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'User-Agent': USER_AGENT
+		},
+		body: new URLSearchParams({ query }).toString()
 	});
 	if (!response.ok) throw new Error(`Wikidata returned ${response.status} ${response.statusText}`);
 	return response.text();
@@ -102,4 +131,36 @@ export function parseAliases(body: string): AliasRecord[] {
 	return bindings
 		.filter((row) => row.book && row.alias)
 		.map((row) => ({ source: SOURCE, workSourceId: qid(row.book!.value), alias: row.alias!.value }));
+}
+
+export function parseSeriesIds(body: string): string[] {
+	const bindings: Binding[] = JSON.parse(body).results.bindings;
+	return [...new Set(bindings.filter((row) => row.series).map((row) => qid(row.series!.value)))];
+}
+
+export function parseSeriesMembers(body: string): SeriesMemberRecord[] {
+	const bindings: Binding[] = JSON.parse(body).results.bindings;
+	const members = new Map<string, SeriesMemberRecord & { authors: Set<string> }>();
+	for (const row of bindings) {
+		if (!row.series || !row.member || !row.ord) continue;
+		const position = Number(row.ord.value);
+		if (!Number.isFinite(position)) continue;
+		const seriesSourceId = qid(row.series.value);
+		const memberId = qid(row.member.value);
+		const key = `${seriesSourceId}|${memberId}`;
+		const member = members.get(key) ?? {
+			source: SOURCE,
+			seriesSourceId,
+			seriesName: row.seriesLabel?.value ?? seriesSourceId,
+			work: { source: SOURCE, sourceId: memberId, title: row.memberLabel?.value ?? memberId, author: '' },
+			position,
+			authors: new Set<string>()
+		};
+		if (row.authorLabel) member.authors.add(row.authorLabel.value);
+		members.set(key, member);
+	}
+	return [...members.values()].map(({ authors, ...member }) => ({
+		...member,
+		work: { ...member.work, author: [...authors].join(', ') }
+	}));
 }

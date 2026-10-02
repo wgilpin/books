@@ -1,0 +1,248 @@
+{
+ "head": {
+  "vars": [
+   "series",
+   "seriesLabel",
+   "member",
+   "memberLabel",
+   "authorLabel",
+   "ord"
+  ]
+ },
+ "results": {
+  "bindings": [
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117480419"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q30131633"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time Series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773991"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773938"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "2"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Locked Tomb series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Harrow the Ninth"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773991"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q112787692"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "3"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Locked Tomb series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nona the Ninth"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117480419"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q115804001"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "2"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time Series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Ruin"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117480419"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117480516"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "3"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time Series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Memory"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773991"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q79557367"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Locked Tomb series"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Gideon the Ninth"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q137362145"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q124435017"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "seriesLabel": {
+     "xml:lang": "mul",
+     "type": "literal",
+     "value": "The Rising World"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Witch King"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    }
+   },
+   {
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q137362145"
+    },
+    "member": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q136500868"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "2"
+    },
+    "seriesLabel": {
+     "xml:lang": "mul",
+     "type": "literal",
+     "value": "The Rising World"
+    },
+    "memberLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Queen Demon"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    }
+   }
+  ]
+ }
+}

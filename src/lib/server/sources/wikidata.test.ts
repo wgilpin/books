@@ -1,9 +1,19 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { AWARD_NOVELS_QUERY, ALIASES_QUERY, parseAliases, parseAwardNovels } from './wikidata';
+import {
+	ALIASES_QUERY,
+	AWARD_NOVELS_QUERY,
+	parseAliases,
+	parseAwardNovels,
+	parseSeriesIds,
+	parseSeriesMembers,
+	SERIES_IDS_QUERY,
+	seriesMembersQuery
+} from './wikidata';
 
 const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
 const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
+const seriesFixture = readFileSync('tests/fixtures/wikidata-series.json', 'utf8');
 
 describe('parseAwardNovels', () => {
 	const records = parseAwardNovels(fixture);
@@ -61,5 +71,51 @@ describe('labels and aliases', () => {
 			{ source: 'wikidata', workSourceId: 'Q123300220', alias: 'Some Desperate Glory' },
 			{ source: 'wikidata', workSourceId: 'Q999999999', alias: 'Not an award book' }
 		]);
+	});
+});
+
+describe('series', () => {
+	it('asks for the series of award books', () => {
+		expect(SERIES_IDS_QUERY).toContain('wdt:P179');
+		expect(parseSeriesIds('{"results":{"bindings":[{"series":{"value":"http://www.wikidata.org/entity/Q1"}}]}}')).toEqual([
+			'Q1'
+		]);
+	});
+
+	it('asks for the numbered members of the given series, with en,mul labels', () => {
+		const query = seriesMembersQuery(['Q1', 'Q2']);
+		expect(query).toContain('VALUES ?series { wd:Q1 wd:Q2 }');
+		expect(query).toContain('pq:P1545');
+		expect(query).toContain('wikibase:language "en,mul"');
+	});
+
+	it('returns each numbered member with its series, title, author and position', () => {
+		const members = parseSeriesMembers(seriesFixture);
+		expect(members).toHaveLength(8);
+		expect(members).toContainEqual({
+			source: 'wikidata',
+			seriesSourceId: expect.stringMatching(/^Q\d+$/),
+			seriesName: 'Locked Tomb series',
+			work: { source: 'wikidata', sourceId: expect.stringMatching(/^Q\d+$/), title: 'Harrow the Ninth', author: 'Tamsyn Muir' },
+			position: 2
+		});
+	});
+
+	it('skips a member whose number is not numeric', () => {
+		const body = JSON.stringify({
+			results: {
+				bindings: [
+					{
+						series: { value: 'http://www.wikidata.org/entity/Q1' },
+						seriesLabel: { value: 'S' },
+						member: { value: 'http://www.wikidata.org/entity/Q2' },
+						memberLabel: { value: 'Prequel' },
+						authorLabel: { value: 'A' },
+						ord: { value: 'prequel' }
+					}
+				]
+			}
+		});
+		expect(parseSeriesMembers(body)).toEqual([]);
 	});
 });
