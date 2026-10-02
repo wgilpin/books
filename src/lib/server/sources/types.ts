@@ -23,6 +23,12 @@ export interface AliasRecord {
 	alias: string;
 }
 
+export interface GenreRecord {
+	source: string;
+	workSourceId: string;
+	label: string;
+}
+
 export interface SeriesMemberRecord {
 	source: string;
 	seriesSourceId: string;

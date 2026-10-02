@@ -1,4 +1,4 @@
-import type { AliasRecord, Award, AwardRecord, SeriesMemberRecord, SourceRecords, WorkRecord } from './types';
+import type { AliasRecord, Award, AwardRecord, GenreRecord, SeriesMemberRecord, SourceRecords, WorkRecord } from './types';
 
 export const SOURCE = 'wikidata';
 
@@ -58,8 +58,18 @@ SELECT ?series ?seriesLabel ?member ?memberLabel ?authorLabel ?ord WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
 }`;
 
+/** Genre labels of award books. */
+export const GENRES_QUERY = `
+SELECT DISTINCT ?book ?genreLabel WHERE {
+  VALUES ?award { ${awardValues} }
+  { ?book p:P1411/ps:P1411 ?award } UNION { ?book p:P166/ps:P166 ?award }
+  ?book wdt:P136 ?genre .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
+}`;
+
 export const fetchAwardNovels = (fetchFn: typeof fetch = fetch) => runQuery(AWARD_NOVELS_QUERY, fetchFn);
 export const fetchAliases = (fetchFn: typeof fetch = fetch) => runQuery(ALIASES_QUERY, fetchFn);
+export const fetchGenres = (fetchFn: typeof fetch = fetch) => runQuery(GENRES_QUERY, fetchFn);
 export const fetchSeriesIds = (fetchFn: typeof fetch = fetch) => runQuery(SERIES_IDS_QUERY, fetchFn);
 export const fetchSeriesMembers = (ids: string[], fetchFn: typeof fetch = fetch) =>
 	runQuery(seriesMembersQuery(ids), fetchFn);
@@ -163,4 +173,11 @@ export function parseSeriesMembers(body: string): SeriesMemberRecord[] {
 		...member,
 		work: { ...member.work, author: [...authors].join(', ') }
 	}));
+}
+
+export function parseGenres(body: string): GenreRecord[] {
+	const bindings: Binding[] = JSON.parse(body).results.bindings;
+	return bindings
+		.filter((row) => row.book && row.genreLabel)
+		.map((row) => ({ source: SOURCE, workSourceId: qid(row.book!.value), label: row.genreLabel!.value }));
 }

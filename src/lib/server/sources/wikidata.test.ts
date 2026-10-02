@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
 	ALIASES_QUERY,
 	AWARD_NOVELS_QUERY,
+	GENRES_QUERY,
+	parseGenres,
 	parseAliases,
 	parseAwardNovels,
 	parseSeriesIds,
@@ -14,6 +16,7 @@ import {
 const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
 const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
 const seriesFixture = readFileSync('tests/fixtures/wikidata-series.json', 'utf8');
+const genreFixture = readFileSync('tests/fixtures/wikidata-genres.json', 'utf8');
 
 describe('parseAwardNovels', () => {
 	const records = parseAwardNovels(fixture);
@@ -117,5 +120,18 @@ describe('series', () => {
 			}
 		});
 		expect(parseSeriesMembers(body)).toEqual([]);
+	});
+});
+
+describe('genres', () => {
+	it('asks for the genre labels of award books, with en,mul labels', () => {
+		expect(GENRES_QUERY).toContain('wdt:P136');
+		expect(GENRES_QUERY).toContain('wikibase:language "en,mul"');
+	});
+
+	it('returns each genre label with the Wikidata id of its book', () => {
+		const genres = parseGenres(genreFixture);
+		expect(genres).toHaveLength(37);
+		expect(genres).toContainEqual({ source: 'wikidata', workSourceId: 'Q123300220', label: 'science fiction' });
 	});
 });
