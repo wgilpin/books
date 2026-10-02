@@ -1,7 +1,7 @@
 import type { Genre } from './genre';
 
-// The list rule. Pure: plain records in, entries out. "Owned" is whatever `owns` says,
-// which the caller builds from the Kindle match and the overrides.
+// The list rule. Pure: plain records in, entries out. The caller's `markOf` says what I
+// decided about each book: the Kindle match and the marks I set on the page.
 
 export interface WorkInput {
 	source: string;
@@ -23,6 +23,13 @@ export interface AwardBookInput extends WorkInput {
 }
 
 export type GenreFilter = 'sf' | 'fantasy';
+
+/** What I decided about a book. The Kindle match counts as owned. */
+export type Mark = 'owned' | 'read' | 'rejected' | 'queued';
+type MarkOf = (work: WorkInput) => Mark | undefined;
+
+/** Owned and read books are behind me: a series moves past them. */
+const done = (mark: Mark | undefined) => mark === 'owned' || mark === 'read';
 
 export interface SeriesMemberInput {
 	seriesKey: string;
@@ -55,13 +62,13 @@ const keyOf = (work: { source: string; sourceId: string }) => `${work.source}|${
 export function buildEntries({
 	awardBooks,
 	members,
-	owns,
+	markOf,
 	limit = 10,
 	genre
 }: {
 	awardBooks: AwardBookInput[];
 	members: SeriesMemberInput[];
-	owns: (work: WorkInput) => boolean;
+	markOf: MarkOf;
 	limit?: number;
 	genre?: GenreFilter;
 }): Entry[] {
@@ -96,7 +103,7 @@ export function buildEntries({
 	const entries: Entry[] = [];
 	for (const group of ordered) {
 		if (entries.length >= limit) break;
-		const entry = entryFor(group, owns);
+		const entry = entryFor(group, markOf);
 		if (entry && matches(entry.genre, genre)) entries.push(entry);
 	}
 	return entries;
@@ -108,7 +115,7 @@ function matches(genre: Genre, filter?: GenreFilter): boolean {
 	return unknown || genre[filter];
 }
 
-function entryFor(group: Group, owns: (work: WorkInput) => boolean): Entry | null {
+function entryFor(group: Group, markOf: MarkOf): Entry | null {
 	const genre = {
 		sf: group.books.some((book) => book.genre.sf),
 		fantasy: group.books.some((book) => book.genre.fantasy)
@@ -119,13 +126,17 @@ function entryFor(group: Group, owns: (work: WorkInput) => boolean): Entry | nul
 
 	if (!group.members) {
 		const [book] = group.books;
-		if (owns(book)) return null;
+		const mark = markOf(book);
+		if (done(mark) || mark === 'rejected') return null;
 		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null, genre };
 	}
 
-	// The book after the last one I own; the first book when I own none.
-	const lastOwned = Math.max(-Infinity, ...group.members.filter((m) => owns(m.work)).map((m) => m.position));
-	const next = group.members.find((m) => m.position > lastOwned && !owns(m.work));
+	// Rejecting any book of a series rejects the series (ISS-11).
+	if (group.members.some((m) => markOf(m.work) === 'rejected')) return null;
+
+	// The book after the last one I own or read; the first book when there is none.
+	const lastOwned = Math.max(-Infinity, ...group.members.filter((m) => done(markOf(m.work))).map((m) => m.position));
+	const next = group.members.find((m) => m.position > lastOwned && !done(markOf(m.work)));
 	if (!next) return null;
 	return {
 		source: next.work.source,

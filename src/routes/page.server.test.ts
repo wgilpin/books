@@ -17,9 +17,7 @@ const run = (search = '') =>
 
 describe('/ load', () => {
 	beforeEach(() => {
-		getDb().exec(
-			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
-		);
+		resetDb();
 	});
 
 	it('returns no books and no refresh on an empty database', async () => {
@@ -77,19 +75,20 @@ function lastFirst(name: string) {
 	return `${parts.at(-1)}, ${parts.slice(0, -1).join(' ')}`;
 }
 
-function own(book: { source: string; sourceId: string }) {
+function mark(book: { source: string; sourceId: string }, value: string) {
 	const form = new FormData();
 	form.set('source', book.source);
 	form.set('sourceId', book.sourceId);
-	const request = new Request('http://localhost:3000/?/own', { method: 'POST', body: form });
-	return actions.own({ request } as Parameters<typeof actions.own>[0]);
+	form.set('mark', value);
+	const request = new Request('http://localhost:3000/?/mark', { method: 'POST', body: form });
+	return actions.mark({ request } as Parameters<typeof actions.mark>[0]) as Promise<any>;
 }
+
+const own = (book: { source: string; sourceId: string }) => mark(book, 'owned');
 
 describe('"I own this"', () => {
 	beforeEach(async () => {
-		getDb().exec(
-			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
-		);
+		resetDb();
 		await startRefresh(getDb(), okFetch).done;
 	});
 
@@ -119,17 +118,15 @@ describe('"I own this"', () => {
 	});
 
 	it('rejects a request with no book', async () => {
-		const request = new Request('http://localhost:3000/?/own', { method: 'POST', body: new FormData() });
-		const result = (await actions.own({ request } as Parameters<typeof actions.own>[0])) as any;
+		const request = new Request('http://localhost:3000/?/mark', { method: 'POST', body: new FormData() });
+		const result = (await actions.mark({ request } as Parameters<typeof actions.mark>[0])) as any;
 		expect(result.status).toBe(400);
 	});
 });
 
 describe('series entries', () => {
 	beforeEach(async () => {
-		getDb().exec(
-			'DELETE FROM series_entry; DELETE FROM series; DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
-		);
+		resetDb();
 		await startRefresh(getDb(), okFetch).done;
 	});
 
@@ -148,9 +145,7 @@ describe('series entries', () => {
 
 describe('genre filter', () => {
 	beforeEach(async () => {
-		getDb().exec(
-			'DELETE FROM work_genre; DELETE FROM series_entry; DELETE FROM series; DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
-		);
+		resetDb();
 		await startRefresh(getDb(), okFetch).done;
 	});
 
@@ -172,5 +167,46 @@ describe('genre filter', () => {
 		const data = await run('?genre=xyz');
 		expect(data.genre).toBeNull();
 		expect(data.books.map((b: any) => b.title)).toEqual((await run()).books.map((b: any) => b.title));
+	});
+});
+
+function resetDb() {
+	getDb().exec(
+		'DELETE FROM book_mark; DELETE FROM work_genre; DELETE FROM series_entry; DELETE FROM series; DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned;'
+	);
+}
+
+describe('Read and Reject', () => {
+	beforeEach(async () => {
+		resetDb();
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	const lockedTomb = () => listAwardBooks(getDb(), Infinity).find((b) => b.series?.name === 'Locked Tomb series');
+
+	it('moves a series entry on when I mark its book read', async () => {
+		await mark(lockedTomb()!, 'read');
+		expect(lockedTomb()).toMatchObject({ title: 'Harrow the Ninth' });
+	});
+
+	it('drops the whole series when I reject its entry, and it stays gone after an import and a refresh', async () => {
+		await mark(lockedTomb()!, 'rejected');
+		replaceOwned(getDb(), [{ asin: 'B9', title: 'Other', authors: ['Other, Author'] }]);
+		await startRefresh(getDb(), okFetch).done;
+		expect(lockedTomb()).toBeUndefined();
+	});
+
+	it('removes a rejected standalone book for good', async () => {
+		const [first] = (await run()).books;
+		await mark(first, 'rejected');
+		await startRefresh(getDb(), okFetch).done;
+		expect((await run()).books.map((b: any) => b.title)).not.toContain(first.title);
+	});
+
+	it('fails with 400 and saves nothing for an unknown mark', async () => {
+		const [first] = (await run()).books;
+		const result = await mark(first, 'loved');
+		expect(result.status).toBe(400);
+		expect(getDb().prepare('SELECT COUNT(*) FROM book_mark').pluck().get()).toBe(0);
 	});
 });
