@@ -21,7 +21,7 @@ describe('/ load', () => {
 	});
 
 	it('returns no books and no refresh on an empty database', async () => {
-		expect(await run()).toEqual({ books: [], refresh: null, genre: null, includeUnknown: true });
+		expect(await run()).toEqual({ books: [], refresh: null, genre: null, includeUnknown: true, limit: 10, hasMore: false });
 	});
 
 	it('returns the ten newest award books, newest award year first, each with entries and Kindle link', async () => {
@@ -252,5 +252,37 @@ describe('genre override and include unknown', () => {
 		const data = await run();
 		expect(data.includeUnknown).toBe(true);
 		expect(data.books.some((b: any) => !b.genre.sf && !b.genre.fantasy)).toBe(true);
+	});
+});
+
+describe('show more', () => {
+	beforeEach(async () => {
+		resetDb();
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	it('lists ten and says more are left by default', async () => {
+		const data = await run();
+		expect(data.books).toHaveLength(10);
+		expect(data).toMatchObject({ limit: 10, hasMore: true });
+	});
+
+	it('lists twenty for ?limit=20, the first ten unchanged', async () => {
+		const ten = (await run()).books.map((b: any) => b.title);
+		const data = await run('?limit=20');
+		expect(data.books).toHaveLength(20);
+		expect(data.books.slice(0, 10).map((b: any) => b.title)).toEqual(ten);
+	});
+
+	it('says no more are left when the list holds every entry', async () => {
+		const data = await run('?limit=200');
+		expect(data.books.length).toBeLessThan(200);
+		expect(data.hasMore).toBe(false);
+	});
+
+	it('uses ten for a limit that is not a positive number, and caps it at 200', async () => {
+		expect((await run('?limit=abc')).limit).toBe(10);
+		expect((await run('?limit=-5')).limit).toBe(10);
+		expect((await run('?limit=5000')).limit).toBe(200);
 	});
 });

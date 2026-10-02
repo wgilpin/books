@@ -120,3 +120,11 @@ a book was queued.
 
 The user wants an "Include unknown" control next to the genre filters, on by
 default, that leaves out "genre unknown" books when off.
+
+## ISS-14 — The list stops at ten entries with no way to see more
+
+**Raised:** 2026-10-02
+**Status:** fixed 2026-10-03
+**Lands in:** fix on branch `fix-show-more`, proved by `page.server.test.ts` "lists twenty for ?limit=20, the first ten unchanged" and `page.test.ts` "links to ten more" 
+
+The user wants a "Show more" button under the list. `/` always lists ten.
