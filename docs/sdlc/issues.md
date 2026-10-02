@@ -88,8 +88,8 @@ series). The card reads "Book 1 of Q126690200".
 ## ISS-10 — Many recent books have no Wikidata genre
 
 **Raised:** 2026-10-02
-**Status:** scheduled
-**Lands in:** epic-03-genre-override (phase 06)
+**Status:** fixed 2026-10-02
+**Lands in:** epic-03-genre-override (phase 06), proved by `books.test.ts` "gives a set genre to an unknown book" 
 
 From epic-02-genre-filter. Half of today's fantasy list is "genre unknown". A
 manual genre override, or a second source, would close it.
@@ -115,8 +115,8 @@ a book was queued.
 ## ISS-13 — The list has no way to leave out unknown-genre books
 
 **Raised:** 2026-10-02
-**Status:** scheduled
-**Lands in:** epic-03-genre-override (phase 06), AC-8 to AC-10
+**Status:** fixed 2026-10-02
+**Lands in:** epic-03-genre-override (phase 06), proved by `books.test.ts` "gives a set genre to an unknown book" , AC-8 to AC-10
 
 The user wants an "Include unknown" control next to the genre filters, on by
 default, that leaves out "genre unknown" books when off.
