@@ -31,7 +31,10 @@ Updated: 2026-10-02
   - [x] epic-01-kindle-import — merged 2026-10-02
   - [x] epic-02-hide-owned — merged 2026-10-02
   - [x] epic-03-own-button — merged 2026-10-02
-- [ ] 03-series-rule — pending
+- [ ] 03-series-rule — in progress
+  - [x] epic-01-apply-design — reviewed 2026-10-02
+  - [ ] epic-02-series-data — pending
+  - [ ] epic-03-series-entries — pending
 - [ ] 04-on-the-internet — pending
 - [ ] 05-triage — pending
 

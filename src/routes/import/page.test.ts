@@ -19,3 +19,14 @@ describe('/import page', () => {
 		);
 	});
 });
+
+describe('/import page design', () => {
+	it('uses the page header, a notice for the result and the styled file picker', () => {
+		const body = page({ count: 5, importedAt: 'x' }, { imported: 5 });
+		expect(body).toMatch(/<header class="header"/);
+		expect(body).toMatch(/<p class="notice">Imported 5 books\.<\/p>/);
+		expect(body).toMatch(/<label class="picker">/);
+		expect(body).toMatch(/<button class="button button--primary" type="submit">Import<\/button>/);
+		expect(page({ count: 5, importedAt: 'x' }, { error: 'bad' })).toMatch(/<p class="notice notice--error" role="alert">/);
+	});
+});

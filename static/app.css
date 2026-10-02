@@ -1,0 +1,61 @@
+/* App stylesheet. Tokens and components from docs/sdlc/design.md and docs/sdlc/design-kit/tokens.css. */
+:root {
+	--bg: #f4f1ea; --surface: #ffffff; --text: #17161c; --muted: #5e5b66; --border: #e2ded3;
+	--primary: #1f4fd8; --on-primary: #ffffff; --danger: #b42318;
+	--hugo: #c2410c; --nebula: #6d28d9; --clarke: #0f766e; --bsfa: #be123c;
+	--font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+	--fs-14: 14px; --fs-16: 16px; --fs-20: 20px; --fs-28: 28px; --fs-36: 36px;
+	--s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-6: 24px; --s-8: 32px; --s-12: 48px;
+	--r-control: 6px; --r-card: 14px; --r-pill: 999px;
+	--shadow-card: 0 1px 2px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0 / 0.08);
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #14131a; --surface: #1e1d26; --text: #f2f0ea; --muted: #a7a3b0; --border: #2e2c38;
+		--primary: #7fa2ff; --on-primary: #0b1020; --danger: #ff8a80; --shadow-card: none;
+	}
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: var(--fs-16)/1.5 var(--font); }
+main { max-width: 720px; margin: 0 auto; padding: var(--s-8) var(--s-4) var(--s-12); }
+a { color: var(--primary); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.stack { display: grid; gap: var(--s-4); margin: var(--s-6) 0 0; padding: 0; list-style: none; }
+.inline-form { display: inline; margin: 0; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+.badge { display: inline-block; padding: 2px var(--s-3); border-radius: var(--r-pill); font-size: var(--fs-14); font-weight: 700; border: 2px solid var(--award); color: var(--text); }
+.badge--won { background: var(--award); color: #fff; }
+.badge--hugo { --award: var(--hugo); } .badge--nebula { --award: var(--nebula); }
+.badge--clarke { --award: var(--clarke); } .badge--bsfa { --award: var(--bsfa); }
+
+.button { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: var(--r-control); font: 600 var(--fs-16) var(--font); text-decoration: none; cursor: pointer; border: 2px solid var(--primary); }
+.button--primary { background: var(--primary); color: var(--on-primary); }
+.button--secondary { background: transparent; color: var(--primary); }
+.button--quiet { background: transparent; color: var(--primary); border-color: transparent; }
+.button:hover:not(:disabled) { filter: brightness(1.08); }
+.button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); box-shadow: var(--shadow-card); padding: var(--s-6); max-width: 720px; }
+.card__title { margin: 0; font-size: var(--fs-28); font-weight: 800; line-height: 1.15; }
+.card__title a { color: inherit; text-decoration: none; }
+.card__title a:hover { text-decoration: underline; }
+.card__author { margin: var(--s-1) 0 var(--s-3); color: var(--muted); font-size: var(--fs-20); }
+.card__badges { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.card__series { margin: var(--s-3) 0 0; color: var(--muted); font-size: var(--fs-14); }
+.card__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-4); }
+@media (max-width: 480px) { .card__title { font-size: 24px; } }
+
+.notice { margin: var(--s-4) 0 0; padding: var(--s-3) var(--s-4); border-radius: var(--r-control); border-left: 4px solid var(--muted); background: var(--surface); }
+.notice--progress { border-left-color: var(--primary); }
+.notice--error { border-left-color: var(--danger); color: var(--danger); }
+
+.header h1 { margin: 0 0 var(--s-1); font-size: var(--fs-36); font-weight: 800; line-height: 1.1; }
+.header__meta { margin: 0 0 var(--s-4); color: var(--muted); font-size: var(--fs-14); }
+.header__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+
+.picker { display: grid; gap: var(--s-2); font-weight: 600; }
+.picker input[type='file'] { font: inherit; }
+.picker input[type='file']::file-selector-button { margin-right: var(--s-3); padding: var(--s-2) var(--s-4); border: 2px solid var(--primary); border-radius: var(--r-control); background: transparent; color: var(--primary); font: 600 var(--fs-16) var(--font); cursor: pointer; }
+
+.help { color: var(--muted); font-size: var(--fs-14); }

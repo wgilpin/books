@@ -54,3 +54,49 @@ describe('/ page "I own this"', () => {
 		expect(body).toMatch(/<button[^>]*>I own this<\/button>/);
 	});
 });
+
+describe('/ page design', () => {
+	const twoAwards = {
+		...book,
+		awards: [
+			{ award: 'Hugo', year: 2024, result: 'won' },
+			{ award: 'Nebula', year: 2024, result: 'shortlisted' }
+		]
+	};
+	const ok = { status: 'ok', finishedAt: '2026-10-02 21:00:00', error: null };
+
+	it('shows a filled badge for a win and an outlined badge for a shortlisting, in the award class', () => {
+		const body = page({ books: [twoAwards], refresh: ok });
+		expect(body).toMatch(/<span class="badge badge--hugo badge--won"[^>]*>Hugo 2024 · won<\/span>/);
+		expect(body).toMatch(/<span class="badge badge--nebula"[^>]*>Nebula 2024<\/span>/);
+	});
+
+	it('puts the title link, author, a primary Kindle link and a secondary I own this button in a card', () => {
+		const body = page({ books: [book], refresh: ok });
+		expect(body).toMatch(/<article class="card"/);
+		expect(body).toMatch(/<h2 class="card__title"><a [^>]*>Venomous Lumpsucker<\/a><\/h2>/);
+		expect(body).toMatch(/<p class="card__author">Ned Beauman<\/p>/);
+		expect(body).toMatch(/<a class="button button--primary"[^>]*>Kindle/);
+		expect(body).toMatch(/<button class="button button--secondary"[^>]*>I own this<\/button>/);
+	});
+
+	it('names the book in the I own this button and says the Kindle link opens a new tab', () => {
+		const body = page({ books: [book], refresh: ok });
+		expect(body).toMatch(/<button [^>]*aria-label="I own Venomous Lumpsucker"/);
+		expect(body).toMatch(/<a class="button button--primary"[^>]*target="_blank"[^>]*>Kindle<span class="sr-only"> \(opens in a new tab\)<\/span><\/a>/);
+	});
+
+	it('says I own every award book when a refresh succeeded and no book is left', () => {
+		const body = page({ books: [], refresh: ok });
+		expect(body).toContain('You own every award book in the list.');
+		expect(body).not.toContain('No award data yet');
+	});
+
+	it('uses the page header and a notice for the refresh state', () => {
+		const body = page({ books: [book], refresh: ok });
+		expect(body).toMatch(/<header class="header"/);
+		expect(body).toMatch(/<p class="notice">Last refreshed 2026-10-02 21:00:00\.<\/p>/);
+		const failed = page({ books: [book], refresh: { status: 'failed', finishedAt: 'x', error: 'boom' } });
+		expect(failed).toMatch(/<p class="notice notice--error" role="alert">/);
+	});
+});
