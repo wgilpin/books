@@ -33,6 +33,7 @@ Other genres. Several filters at once. Remembering the filter.
 
 1. `epic-01-genre-data.md` — genre query, table, refresh and classifier.
 2. `epic-02-genre-filter.md` — the filter in `discover`, the links and the tag.
+3. `epic-03-genre-override.md` — set the genre of an unknown book (ISS-10).
 
 Epic 02 needs epic 01.
 

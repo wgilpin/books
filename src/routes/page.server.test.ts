@@ -21,7 +21,7 @@ describe('/ load', () => {
 	});
 
 	it('returns no books and no refresh on an empty database', async () => {
-		expect(await run()).toEqual({ books: [], refresh: null, genre: null });
+		expect(await run()).toEqual({ books: [], refresh: null, genre: null, includeUnknown: true });
 	});
 
 	it('returns the ten newest award books, newest award year first, each with entries and Kindle link', async () => {
@@ -40,7 +40,8 @@ describe('/ load', () => {
 			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
 			awards: [expect.objectContaining({ year: 2024 })],
 			series: null,
-			genre: { sf: expect.any(Boolean), fantasy: expect.any(Boolean) }
+			genre: { sf: expect.any(Boolean), fantasy: expect.any(Boolean) },
+			awardBooks: [{ source: 'wikidata', sourceId: expect.stringMatching(/^Q\d+$/) }]
 		});
 	});
 
@@ -208,5 +209,48 @@ describe('Read and Reject', () => {
 		const result = await mark(first, 'loved');
 		expect(result.status).toBe(400);
 		expect(getDb().prepare('SELECT COUNT(*) FROM book_mark').pluck().get()).toBe(0);
+	});
+});
+
+describe('genre override and include unknown', () => {
+	beforeEach(async () => {
+		resetDb();
+		getDb().exec('DELETE FROM genre_override;');
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	function setGenreVia(keys: { source: string; sourceId: string }[], value: string) {
+		const form = new FormData();
+		for (const key of keys) form.append('work', `${key.source}|${key.sourceId}`);
+		form.set('genre', value);
+		const request = new Request('http://localhost:3000/?/genre', { method: 'POST', body: form });
+		return actions.genre({ request } as Parameters<typeof actions.genre>[0]) as Promise<any>;
+	}
+
+	it('leaves a book set to science fiction out of the fantasy filter', async () => {
+		const unknown = listAwardBooks(getDb(), Infinity).find((b) => !b.genre.sf && !b.genre.fantasy)!;
+		await setGenreVia(unknown.awardBooks, 'sf');
+		const fantasy = listAwardBooks(getDb(), Infinity, { genre: 'fantasy' }).map((b) => b.title);
+		expect(fantasy).not.toContain(unknown.title);
+	});
+
+	it('fails with 400 and saves nothing for an unknown genre value', async () => {
+		const unknown = listAwardBooks(getDb(), Infinity).find((b) => !b.genre.sf && !b.genre.fantasy)!;
+		const result = await setGenreVia(unknown.awardBooks, 'horror');
+		expect(result.status).toBe(400);
+		expect(getDb().prepare('SELECT COUNT(*) FROM genre_override').pluck().get()).toBe(0);
+	});
+
+	it('leaves out unknown-genre books for ?unknown=0, still listing ten', async () => {
+		const data = await run('?unknown=0');
+		expect(data.includeUnknown).toBe(false);
+		expect(data.books).toHaveLength(10);
+		expect(data.books.every((b: any) => b.genre.sf || b.genre.fantasy)).toBe(true);
+	});
+
+	it('includes unknown-genre books with no unknown parameter', async () => {
+		const data = await run();
+		expect(data.includeUnknown).toBe(true);
+		expect(data.books.some((b: any) => !b.genre.sf && !b.genre.fantasy)).toBe(true);
 	});
 });

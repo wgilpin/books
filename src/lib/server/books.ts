@@ -3,6 +3,7 @@ import { classifyGenre } from '../genre';
 import { kindleLink } from '../kindle-link';
 import { ownedIndex, type OwnedBook } from '../match';
 import type { Db } from './db';
+import { genreOverrides } from './genres';
 import { marksBySource } from './marks';
 
 export type AwardBook = Entry & { kindleUrl: string };
@@ -11,7 +12,11 @@ export type AwardBook = Entry & { kindleUrl: string };
  * The list: award books and series I do not own (Kindle match or a mark), one entry per
  * series, newest award year first, cut to `limit`. Marks win over the Kindle match. The rule itself lives in discover.ts.
  */
-export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBook[] {
+export function listAwardBooks(
+	db: Db,
+	limit = 10,
+	{ genre, includeUnknown = true }: { genre?: GenreFilter; includeUnknown?: boolean } = {}
+): AwardBook[] {
 	const aliases = new Map<number, string[]>();
 	for (const { work_id, alias } of db.prepare('SELECT work_id, alias FROM work_alias').all() as {
 		work_id: number;
@@ -49,7 +54,11 @@ export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBo
 		book.awards.push({ award: row.award, year: row.year, result: row.result });
 		awardBooks.set(row.id, book);
 	}
-	for (const [id, book] of awardBooks) book.genre = classifyGenre(labels.get(id) ?? [], book.awards);
+	// A genre I set by hand wins over the Wikidata labels.
+	const setGenres = genreOverrides(db);
+	for (const [id, book] of awardBooks) {
+		book.genre = setGenres.get(`${book.source}|${book.sourceId}`) ?? classifyGenre(labels.get(id) ?? [], book.awards);
+	}
 
 	const members = (
 		db
@@ -75,6 +84,7 @@ export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBo
 		members,
 		markOf: (work) => marks.get(`${work.source}|${work.sourceId}`) ?? (kindle.owns(work) ? 'owned' : undefined),
 		limit,
-		genre
+		genre,
+		includeUnknown
 	}).map((entry) => ({ ...entry, kindleUrl: kindleLink(entry.title, entry.author) }));
 }

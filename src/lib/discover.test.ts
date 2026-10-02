@@ -167,3 +167,31 @@ describe('buildEntries queue', () => {
 		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: [], markOf: marks({ Q9: 'queued' }) })).toEqual([]);
 	});
 });
+
+describe('buildEntries include unknown', () => {
+	const SF = { sf: true, fantasy: false };
+	const books = [award(work('S1', 'Space'), 2024, 'won', 'Hugo', SF), award(work('U1', 'Unknown'), 2024, 'won', 'Hugo', UNKNOWN)];
+	const titles = (opts: { genre?: 'sf' | 'fantasy'; includeUnknown?: boolean }) =>
+		buildEntries({ awardBooks: books, members: [], markOf: ownsIds(), ...opts }).map((e) => e.title).sort();
+
+	it('includes unknown-genre entries by default', () => {
+		expect(titles({})).toEqual(['Space', 'Unknown']);
+		expect(titles({ genre: 'sf' })).toEqual(['Space', 'Unknown']);
+	});
+
+	it('leaves out unknown-genre entries under every filter when asked', () => {
+		expect(titles({ includeUnknown: false })).toEqual(['Space']);
+		expect(titles({ genre: 'sf', includeUnknown: false })).toEqual(['Space']);
+		expect(titles({ genre: 'fantasy', includeUnknown: false })).toEqual([]);
+	});
+});
+
+describe('buildEntries award keys', () => {
+	it('carries the award books of an entry, for setting its genre', () => {
+		const [entry] = buildEntries({ awardBooks: [award(b3, 2024), award(b4, 2023)], members: saga, markOf: ownsIds() });
+		expect(entry.awardBooks).toEqual([
+			{ source: 'wikidata', sourceId: 'Q3' },
+			{ source: 'wikidata', sourceId: 'Q4' }
+		]);
+	});
+});

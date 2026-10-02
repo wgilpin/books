@@ -1,5 +1,6 @@
 import { listAwardBooks } from '#lib/server/books.js';
 import { getDb } from '#lib/server/db.js';
+import { genreFromForm } from '#lib/server/genres.js';
 import { markFromForm } from '#lib/server/marks.js';
 import { latestRefresh, startRefresh } from '#lib/server/refresh.js';
 import type { Actions, PageServerLoad } from './$types';
@@ -11,7 +12,13 @@ export const load: PageServerLoad = async ({ url }) => {
 	const db = getDb();
 	const param = url.searchParams.get('genre');
 	const genre = GENRES.includes(param as GenreParam) ? (param as GenreParam) : null;
-	return { books: listAwardBooks(db, 10, genre ?? undefined), refresh: latestRefresh(db), genre };
+	const includeUnknown = url.searchParams.get('unknown') !== '0';
+	return {
+		books: listAwardBooks(db, 10, { genre: genre ?? undefined, includeUnknown }),
+		refresh: latestRefresh(db),
+		genre,
+		includeUnknown
+	};
 };
 
 export const actions: Actions = {
@@ -19,5 +26,6 @@ export const actions: Actions = {
 		const { started } = startRefresh(getDb());
 		return { started };
 	},
-	mark: async ({ request }) => markFromForm(getDb(), request)
+	mark: async ({ request }) => markFromForm(getDb(), request),
+	genre: async ({ request }) => genreFromForm(getDb(), request)
 };

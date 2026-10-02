@@ -35,13 +35,14 @@ Updated: 2026-10-02
   - [x] epic-01-apply-design — merged 2026-10-02
   - [x] epic-02-series-data — merged 2026-10-02
   - [x] epic-03-series-entries — merged 2026-10-02
-- [x] 06-genre-filter — done
+- [ ] 06-genre-filter — in progress
   - [x] epic-01-genre-data — merged 2026-10-02
   - [x] epic-02-genre-filter — merged 2026-10-02
+  - [x] epic-03-genre-override — reviewed 2026-10-02
 - [ ] 04-on-the-internet — pending
-- [ ] 05-triage — in progress
+- [x] 05-triage — done
   - [x] epic-01-marks — merged 2026-10-02
-  - [x] epic-02-queue — reviewed 2026-10-02
+  - [x] epic-02-queue — merged 2026-10-02
 
 ## Notes for a fresh session
 

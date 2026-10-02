@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeWikidata } from '../../../tests/fake-wikidata';
 import { listAwardBooks } from './books';
 import { openDb, type Db } from './db';
+import { setGenre } from './genres';
 import { replaceOwned } from './owned';
 import { startRefresh } from './refresh';
 
@@ -43,5 +44,47 @@ describe('listAwardBooks', () => {
 		expect(next).toHaveLength(10);
 		expect(next.map((b) => b.title)).not.toContain(first[0].title);
 		expect(next.slice(0, 9)).toEqual(first.slice(1));
+	});
+});
+
+describe('genre override', () => {
+	let db: Db;
+	beforeEach(async () => {
+		db = openDb(':memory:');
+		await startRefresh(db, okFetch).done;
+	});
+	const find = (title: string) => listAwardBooks(db, Infinity).find((b) => b.title === title)!;
+	const unknownBook = () => listAwardBooks(db, Infinity).find((b) => !b.genre.sf && !b.genre.fantasy)!;
+
+	it('gives a set genre to an unknown book', () => {
+		const book = unknownBook();
+		setGenre(db, book.awardBooks, 'fantasy');
+		expect(find(book.title).genre).toEqual({ sf: false, fantasy: true });
+	});
+
+	it('keeps the set genre through a refresh', async () => {
+		const book = unknownBook();
+		setGenre(db, book.awardBooks, 'both');
+		await startRefresh(db, okFetch).done;
+		expect(find(book.title).genre).toEqual({ sf: true, fantasy: true });
+	});
+
+	it('lets the set genre win over the Wikidata labels', () => {
+		const known = listAwardBooks(db, Infinity).find((b) => b.genre.sf && !b.genre.fantasy)!;
+		setGenre(db, known.awardBooks, 'fantasy');
+		expect(find(known.title).genre).toEqual({ sf: false, fantasy: true });
+	});
+
+	it('applies to the award books of a series entry', () => {
+		const lockedTomb = listAwardBooks(db, Infinity).find((b) => b.series?.name === 'Locked Tomb series')!;
+		setGenre(db, lockedTomb.awardBooks, 'sf');
+		expect(listAwardBooks(db, Infinity).find((b) => b.series?.name === 'Locked Tomb series')!.genre).toEqual({
+			sf: true,
+			fantasy: false
+		});
+	});
+
+	it('rejects an unknown genre value', () => {
+		expect(() => setGenre(db, unknownBook().awardBooks, 'horror' as never)).toThrow();
 	});
 });

@@ -11,9 +11,21 @@
 		awards: { award: string; year: number; result: 'won' | 'shortlisted'; bookTitle?: string }[];
 		series?: { name: string; position: number } | null;
 		genre?: { sf: boolean; fantasy: boolean };
+		awardBooks?: { source: string; sourceId: string }[];
 	}
 
-	let { book, action, marks }: { book: Book; action: string; marks: Mark[] } = $props();
+	let {
+		book,
+		action,
+		marks,
+		genreAction
+	}: { book: Book; action: string; marks: Mark[]; genreAction?: string } = $props();
+
+	const GENRE_BUTTONS = [
+		{ value: 'sf', label: 'Science fiction' },
+		{ value: 'fantasy', label: 'Fantasy' },
+		{ value: 'both', label: 'Both' }
+	];
 
 	const BUTTONS: Record<Mark, { label: string; name: string; variant: string }> = {
 		owned: { label: 'I own this', name: 'I own', variant: 'secondary' },
@@ -41,6 +53,17 @@
 				<span class="tag">genre unknown</span>
 			{/if}
 		</div>
+	{/if}
+	{#if unknownGenre && genreAction && book.awardBooks?.length}
+		<form class="card__genre" method="POST" action={genreAction}>
+			<span class="help">Set genre:</span>
+			{#each book.awardBooks as key (key.source + key.sourceId)}
+				<input type="hidden" name="work" value="{key.source}|{key.sourceId}" />
+			{/each}
+			{#each GENRE_BUTTONS as choice (choice.value)}
+				<button class="button button--quiet button--small" type="submit" name="genre" value={choice.value} aria-label="Set {book.title} as {choice.label}">{choice.label}</button>
+			{/each}
+		</form>
 	{/if}
 	{#if book.series}
 		<p class="card__series">Book {book.series.position} of {book.series.name}</p>

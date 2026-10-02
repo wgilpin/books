@@ -46,8 +46,10 @@ export interface Entry {
 	/** Award entries of the award books this entry stands for, newest first. */
 	awards: (AwardInput & { bookTitle: string })[];
 	series: { name: string; position: number } | null;
-	/** From the award books. Neither flag set means unknown, which every filter keeps. */
+	/** From the award books. Neither flag set means unknown. */
 	genre: Genre;
+	/** The award books this entry stands for; setting a genre applies to them. */
+	awardBooks: { source: string; sourceId: string }[];
 }
 
 interface Group {
@@ -64,13 +66,16 @@ export function buildEntries({
 	members,
 	markOf,
 	limit = 10,
-	genre
+	genre,
+	includeUnknown = true
 }: {
 	awardBooks: AwardBookInput[];
 	members: SeriesMemberInput[];
 	markOf: MarkOf;
 	limit?: number;
 	genre?: GenreFilter;
+	/** Off leaves out unknown-genre entries under every filter. */
+	includeUnknown?: boolean;
 }): Entry[] {
 	const bySeries = new Map<string, SeriesMemberInput[]>();
 	const seriesOfWork = new Map<string, string[]>();
@@ -104,15 +109,15 @@ export function buildEntries({
 	for (const group of ordered) {
 		if (entries.length >= limit) break;
 		const entry = entryFor(group, markOf);
-		if (entry && matches(entry.genre, genre)) entries.push(entry);
+		if (entry && matches(entry.genre, genre, includeUnknown)) entries.push(entry);
 	}
 	return entries;
 }
 
-function matches(genre: Genre, filter?: GenreFilter): boolean {
-	if (!filter) return true;
+function matches(genre: Genre, filter: GenreFilter | undefined, includeUnknown: boolean): boolean {
 	const unknown = !genre.sf && !genre.fantasy;
-	return unknown || genre[filter];
+	if (unknown) return includeUnknown;
+	return !filter || genre[filter];
 }
 
 function entryFor(group: Group, markOf: MarkOf): Entry | null {
@@ -120,6 +125,7 @@ function entryFor(group: Group, markOf: MarkOf): Entry | null {
 		sf: group.books.some((book) => book.genre.sf),
 		fantasy: group.books.some((book) => book.genre.fantasy)
 	};
+	const awardBooks = group.books.map((book) => ({ source: book.source, sourceId: book.sourceId }));
 	const awards = group.books
 		.flatMap((book) => book.awards.map((a) => ({ ...a, bookTitle: book.title })))
 		.sort((a, b) => b.year - a.year || a.award.localeCompare(b.award));
@@ -128,7 +134,7 @@ function entryFor(group: Group, markOf: MarkOf): Entry | null {
 		const [book] = group.books;
 		const mark = markOf(book);
 		if (mark) return null;
-		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null, genre };
+		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null, genre, awardBooks };
 	}
 
 	// Rejecting any book of a series rejects the series (ISS-11). A queued book holds its
@@ -146,6 +152,7 @@ function entryFor(group: Group, markOf: MarkOf): Entry | null {
 		author: next.work.author,
 		awards,
 		series: { name: next.seriesName, position: next.position },
-		genre
+		genre,
+		awardBooks
 	};
 }
