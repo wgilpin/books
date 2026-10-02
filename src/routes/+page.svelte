@@ -6,24 +6,26 @@
 	const running = $derived(data.refresh?.status === 'running');
 	const genre = $derived(data.genre ?? null);
 	const includeUnknown = $derived(data.includeUnknown ?? true);
+	const limit = $derived(data.limit ?? 10);
 	const filters = [
 		{ value: null, label: 'All' },
 		{ value: 'sf', label: 'Science fiction' },
 		{ value: 'fantasy', label: 'Fantasy' }
 	];
 
-	/** The query for a genre and the unknown setting; unknown=0 only when it is off. */
-	function query(g: string | null, unknown: boolean) {
-		const params = [g ? `genre=${g}` : '', unknown ? '' : 'unknown=0'].filter(Boolean);
+	/** The query for the settings; each part only when it differs from the default. */
+	function query(g: string | null, unknown: boolean, n = 10) {
+		const params = [g ? `genre=${g}` : '', unknown ? '' : 'unknown=0', n === 10 ? '' : `limit=${n}`].filter(Boolean);
 		return params.join('&');
 	}
-	const href = (g: string | null, unknown: boolean) => {
-		const q = query(g, unknown);
+	/** Filter links start again at ten. */
+	const href = (g: string | null, unknown: boolean, n = 10) => {
+		const q = query(g, unknown, n);
 		return q ? `/?${q}` : '/';
 	};
-	/** Form actions keep the current filter, so the page comes back filtered. */
+	/** Form actions keep the filter and the length, so the page comes back as it was. */
 	const action = (name: string) => {
-		const q = query(genre, includeUnknown);
+		const q = query(genre, includeUnknown, limit);
 		return q ? `?${q}&/${name}` : `?/${name}`;
 	};
 </script>
@@ -62,12 +64,15 @@
 
 	{#if data.books.length > 0}
 		<ol class="stack">
-			{#each data.books as book}
-				<li>
+			{#each data.books as book, i}
+				<li id="book-{i + 1}">
 					<BookCard {book} action={action('mark')} genreAction={action('genre')} marks={['owned', 'read', 'queued', 'rejected']} />
 				</li>
 			{/each}
 		</ol>
+		{#if data.hasMore}
+			<p class="more"><a class="button button--secondary" href="{href(genre, includeUnknown, limit + 10)}#book-{limit + 1}">Show 10 more</a></p>
+		{/if}
 	{:else if data.refresh?.status === 'ok'}
 		<p class="notice">You own every award book in the list.</p>
 	{:else}

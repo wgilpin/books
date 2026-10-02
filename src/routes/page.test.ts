@@ -207,3 +207,22 @@ describe('/ page genre override and include unknown', () => {
 		expect(body).toContain('action="?genre=fantasy&amp;unknown=0&amp;/mark"');
 	});
 });
+
+describe('/ page show more', () => {
+	const many = Array.from({ length: 10 }, (_, i) => ({ ...book, sourceId: `Q${i}`, title: `Book ${i}` }));
+
+	it('links to ten more, jumping to the first new card and keeping the filters', () => {
+		const body = page({ books: many, refresh: null, genre: 'sf', includeUnknown: false, limit: 10, hasMore: true });
+		expect(body).toMatch(/<a class="button button--secondary" href="\/\?genre=sf&amp;unknown=0&amp;limit=20#book-11">Show 10 more<\/a>/);
+		expect(body).toContain('id="book-10"');
+	});
+
+	it('has no link when no more are left', () => {
+		expect(page({ books: many, refresh: null, genre: null, includeUnknown: true, limit: 10, hasMore: false })).not.toContain('Show 10 more');
+	});
+
+	it('keeps the limit in the forms, so a mark does not shrink the list', () => {
+		const body = page({ books: many, refresh: null, genre: null, includeUnknown: true, limit: 20, hasMore: true });
+		expect(body).toContain('action="?limit=20&amp;/mark"');
+	});
+});
