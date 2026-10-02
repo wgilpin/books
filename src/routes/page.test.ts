@@ -48,7 +48,7 @@ describe('/ page', () => {
 describe('/ page "I own this"', () => {
 	it('gives each entry a form that posts its source and id', () => {
 		const body = page({ books: [book], refresh: null });
-		expect(body).toMatch(/<form[^>]*method="POST"[^>]*action="\?\/own"/);
+		expect(body).toMatch(/<form[^>]*method="POST"[^>]*action="\?\/mark"/);
 		expect(body).toMatch(/<input[^>]*type="hidden"[^>]*name="source"[^>]*value="wikidata"/);
 		expect(body).toMatch(/<input[^>]*type="hidden"[^>]*name="sourceId"[^>]*value="Q133510892"/);
 		expect(body).toMatch(/<button[^>]*>I own this<\/button>/);
@@ -78,6 +78,8 @@ describe('/ page design', () => {
 		expect(body).toMatch(/<p class="card__author">Ned Beauman<\/p>/);
 		expect(body).toMatch(/<a class="button button--primary"[^>]*>Kindle/);
 		expect(body).toMatch(/<button class="button button--secondary"[^>]*>I own this<\/button>/);
+		expect(body).toMatch(/<button class="button button--secondary"[^>]*>Read<\/button>/);
+		expect(body).toMatch(/<button class="button button--quiet"[^>]*>Reject<\/button>/);
 	});
 
 	it('names the book in the I own this button and says the Kindle link opens a new tab', () => {
@@ -148,7 +150,20 @@ describe('/ page genre filter', () => {
 
 	it('keeps the filter in the forms', () => {
 		const body = page({ books: [known], refresh: null, genre: 'fantasy' });
-		expect(body).toContain('action="?genre=fantasy&amp;/own"');
+		expect(body).toContain('action="?genre=fantasy&amp;/mark"');
 		expect(body).toContain('action="?genre=fantasy&amp;/refresh"');
+	});
+});
+
+describe('/ page marks', () => {
+	it('posts each mark with the book title in its accessible name', () => {
+		const body = page({ books: [book], refresh: null, genre: null });
+		for (const [value, label] of [
+			['owned', 'I own'],
+			['read', 'I have read'],
+			['rejected', 'Reject']
+		]) {
+			expect(body).toMatch(new RegExp(`<button [^>]*name="mark"[^>]*value="${value}"[^>]*aria-label="${label} Venomous Lumpsucker"`));
+		}
 	});
 });

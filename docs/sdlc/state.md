@@ -39,7 +39,9 @@ Updated: 2026-10-02
   - [x] epic-01-genre-data — merged 2026-10-02
   - [x] epic-02-genre-filter — merged 2026-10-02
 - [ ] 04-on-the-internet — pending
-- [ ] 05-triage — pending
+- [ ] 05-triage — in progress
+  - [x] epic-01-marks — reviewed 2026-10-02
+  - [ ] epic-02-queue — pending
 
 ## Notes for a fresh session
 

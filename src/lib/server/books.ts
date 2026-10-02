@@ -3,12 +3,13 @@ import { classifyGenre } from '../genre';
 import { kindleLink } from '../kindle-link';
 import { ownedIndex, type OwnedBook } from '../match';
 import type { Db } from './db';
+import { marksBySource } from './marks';
 
 export type AwardBook = Entry & { kindleUrl: string };
 
 /**
- * The list: award books and series I do not own (Kindle match or override), one entry per
- * series, newest award year first, cut to `limit`. The rule itself lives in discover.ts.
+ * The list: award books and series I do not own (Kindle match or a mark), one entry per
+ * series, newest award year first, cut to `limit`. Marks win over the Kindle match. The rule itself lives in discover.ts.
  */
 export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBook[] {
 	const aliases = new Map<number, string[]>();
@@ -67,16 +68,12 @@ export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBo
 	);
 
 	const kindle = ownedIndex(db.prepare('SELECT title, authors FROM owned').all() as OwnedBook[]);
-	const overrides = new Set(
-		(db.prepare('SELECT source, source_id AS sourceId FROM owned_override').all() as { source: string; sourceId: string }[]).map(
-			(o) => `${o.source}|${o.sourceId}`
-		)
-	);
+	const marks = marksBySource(db);
 
 	return buildEntries({
 		awardBooks: [...awardBooks.values()],
 		members,
-		owns: (work) => overrides.has(`${work.source}|${work.sourceId}`) || kindle.owns(work),
+		markOf: (work) => marks.get(`${work.source}|${work.sourceId}`) ?? (kindle.owns(work) ? 'owned' : undefined),
 		limit,
 		genre
 	}).map((entry) => ({ ...entry, kindleUrl: kindleLink(entry.title, entry.author) }));

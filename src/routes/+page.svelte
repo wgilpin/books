@@ -72,10 +72,12 @@
 						{/if}
 						<div class="card__actions">
 							<a class="button button--primary" href={book.kindleUrl} rel="noopener noreferrer" target="_blank">Kindle<span class="sr-only">{' '}(opens in a new tab)</span></a>
-							<form class="inline-form" method="POST" action={action('own')}>
+							<form class="inline-form card__marks" method="POST" action={action('mark')}>
 								<input type="hidden" name="source" value={book.source} />
 								<input type="hidden" name="sourceId" value={book.sourceId} />
-								<button class="button button--secondary" type="submit" aria-label="I own {book.title}">I own this</button>
+								<button class="button button--secondary" type="submit" name="mark" value="owned" aria-label="I own {book.title}">I own this</button>
+								<button class="button button--secondary" type="submit" name="mark" value="read" aria-label="I have read {book.title}">Read</button>
+								<button class="button button--quiet" type="submit" name="mark" value="rejected" aria-label="Reject {book.title}">Reject</button>
 							</form>
 						</div>
 					</article>

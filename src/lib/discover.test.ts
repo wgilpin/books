@@ -26,39 +26,40 @@ const b2 = work('Q2', 'Two');
 const b3 = work('Q3', 'Three');
 const b4 = work('Q4', 'Four');
 const saga = [member('Saga', b1, 1), member('Saga', b2, 2), member('Saga', b3, 3), member('Saga', b4, 4)];
-const ownsIds = (...ids: string[]) => (w: { sourceId: string }) => ids.includes(w.sourceId);
+const ownsIds = (...ids: string[]) => (w: { sourceId: string }) => (ids.includes(w.sourceId) ? ('owned' as const) : undefined);
+const marks = (m: Record<string, 'owned' | 'read' | 'rejected' | 'queued'>) => (w: { sourceId: string }) => m[w.sourceId];
 
 describe('buildEntries', () => {
 	it('shows the book after the last one I own', () => {
-		const [entry] = buildEntries({ awardBooks: [award(b3, 2024)], members: saga, owns: ownsIds('Q2') });
+		const [entry] = buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: ownsIds('Q2') });
 		expect(entry.title).toBe('Three');
 		expect(entry.series).toEqual({ name: 'Saga', position: 3 });
 	});
 
 	it('moves past the last owned book even when an earlier one is not owned', () => {
-		const [entry] = buildEntries({ awardBooks: [award(b2, 2024)], members: saga, owns: ownsIds('Q3') });
+		const [entry] = buildEntries({ awardBooks: [award(b2, 2024)], members: saga, markOf: ownsIds('Q3') });
 		expect(entry.title).toBe('Four');
 	});
 
 	it('shows the lowest-numbered book when I own none of the series', () => {
-		const [entry] = buildEntries({ awardBooks: [award(b3, 2024)], members: saga, owns: ownsIds() });
+		const [entry] = buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: ownsIds() });
 		expect(entry.title).toBe('One');
 		expect(entry.series).toEqual({ name: 'Saga', position: 1 });
 	});
 
 	it('drops a series when I own every numbered book', () => {
-		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, owns: ownsIds('Q1', 'Q2', 'Q3', 'Q4') })).toEqual([]);
+		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: ownsIds('Q1', 'Q2', 'Q3', 'Q4') })).toEqual([]);
 	});
 
 	it('drops a series when I own the last book, even with gaps before it', () => {
-		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, owns: ownsIds('Q4') })).toEqual([]);
+		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: ownsIds('Q4') })).toEqual([]);
 	});
 
 	it('gives one entry for two award books in one series, with both award books and their badges', () => {
 		const entries = buildEntries({
 			awardBooks: [award(b3, 2023, 'won'), award(b4, 2024, 'shortlisted', 'Nebula')],
 			members: saga,
-			owns: ownsIds('Q1')
+			markOf: ownsIds('Q1')
 		});
 		expect(entries).toHaveLength(1);
 		expect(entries[0].title).toBe('Two');
@@ -71,18 +72,18 @@ describe('buildEntries', () => {
 	it('uses the series with fewer numbered members when a book is in two', () => {
 		const universe = [member('Universe', b1, 1), member('Universe', b2, 2), member('Universe', b3, 3), member('Universe', b4, 4), member('Universe', work('Q5', 'Five'), 5)];
 		const trilogy = [member('Trilogy', b3, 1), member('Trilogy', b4, 2)];
-		const [entry] = buildEntries({ awardBooks: [award(b4, 2024)], members: [...universe, ...trilogy], owns: ownsIds() });
+		const [entry] = buildEntries({ awardBooks: [award(b4, 2024)], members: [...universe, ...trilogy], markOf: ownsIds() });
 		expect(entry.series).toEqual({ name: 'Trilogy', position: 1 });
 		expect(entry.title).toBe('Three');
 	});
 
 	it('shows an award book in no series as itself, and hides it when owned', () => {
 		const lone = work('Q9', 'Lone');
-		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: saga, owns: ownsIds() })[0]).toMatchObject({
+		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: saga, markOf: ownsIds() })[0]).toMatchObject({
 			title: 'Lone',
 			series: null
 		});
-		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: saga, owns: ownsIds('Q9') })).toEqual([]);
+		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: saga, markOf: ownsIds('Q9') })).toEqual([]);
 	});
 
 	it('returns the limit, newest award year first, a series counting once', () => {
@@ -90,7 +91,7 @@ describe('buildEntries', () => {
 		const entries = buildEntries({
 			awardBooks: [...books, award(b3, 2015), award(b4, 2016)],
 			members: saga,
-			owns: ownsIds(),
+			markOf: ownsIds(),
 			limit: 10
 		});
 		expect(entries).toHaveLength(10);
@@ -110,7 +111,7 @@ describe('buildEntries genre filter', () => {
 		award(work('U1', 'Unknown'), 2024, 'won', 'Hugo', UNKNOWN)
 	];
 	const titles = (genre?: 'sf' | 'fantasy') =>
-		buildEntries({ awardBooks: books, members: [], owns: ownsIds(), genre }).map((e) => e.title).sort();
+		buildEntries({ awardBooks: books, members: [], markOf: ownsIds(), genre }).map((e) => e.title).sort();
 
 	it('keeps science fiction and unknown entries for sf', () => {
 		expect(titles('sf')).toEqual(['Both', 'Space', 'Unknown']);
@@ -122,7 +123,7 @@ describe('buildEntries genre filter', () => {
 
 	it('keeps every entry with no filter, each carrying its genre', () => {
 		expect(titles()).toEqual(['Both', 'Dragons', 'Space', 'Unknown']);
-		const unknown = buildEntries({ awardBooks: books, members: [], owns: ownsIds() }).find((e) => e.title === 'Unknown');
+		const unknown = buildEntries({ awardBooks: books, members: [], markOf: ownsIds() }).find((e) => e.title === 'Unknown');
 		expect(unknown!.genre).toEqual(UNKNOWN);
 	});
 
@@ -130,11 +131,28 @@ describe('buildEntries genre filter', () => {
 		const entries = buildEntries({
 			awardBooks: [award(b3, 2024, 'won', 'Hugo', FANTASY)],
 			members: saga,
-			owns: ownsIds(),
+			markOf: ownsIds(),
 			genre: 'fantasy'
 		});
 		expect(entries).toHaveLength(1);
 		expect(entries[0]).toMatchObject({ title: 'One', genre: FANTASY });
-		expect(buildEntries({ awardBooks: [award(b3, 2024, 'won', 'Hugo', FANTASY)], members: saga, owns: ownsIds(), genre: 'sf' })).toEqual([]);
+		expect(buildEntries({ awardBooks: [award(b3, 2024, 'won', 'Hugo', FANTASY)], members: saga, markOf: ownsIds(), genre: 'sf' })).toEqual([]);
+	});
+});
+
+describe('buildEntries marks', () => {
+	it('counts a read book as owned, so the series moves past it', () => {
+		const [entry] = buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: marks({ Q1: 'read', Q2: 'owned' }) });
+		expect(entry.title).toBe('Three');
+	});
+
+	it('leaves out a rejected standalone award book', () => {
+		const lone = work('Q9', 'Lone');
+		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: [], markOf: marks({ Q9: 'rejected' }) })).toEqual([]);
+	});
+
+	it('leaves out a whole series when any of its books is rejected', () => {
+		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: marks({ Q1: 'rejected' }) })).toEqual([]);
+		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: marks({ Q3: 'rejected' }) })).toEqual([]);
 	});
 });
