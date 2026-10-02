@@ -94,6 +94,8 @@ one password, and use the list.
 
 **Goal:** Remember what I decided about each book.
 
+Issue ISS-11: Reject sits beside "I own this"; on a series entry it drops the whole series.
+
 **Works after this phase:** I mark a book read, rejected or queued. Read and
 rejected books never come back. Queued books show in their own list.
 

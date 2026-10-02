@@ -70,8 +70,8 @@ author.
 ## ISS-8 — The list cannot be narrowed to science fiction or to fantasy
 
 **Raised:** 2026-10-02
-**Status:** scheduled
-**Lands in:** phase 06
+**Status:** fixed 2026-10-02
+**Lands in:** phase 06, proved by `page.server.test.ts` "lists science fiction and unknown entries for ?genre=sf" 
 
 No phase covers a genre filter. It needs a genre per book, probably Wikidata
 P136. Checked 2026-10-02: 787 of 913 award books carry a genre.
@@ -84,3 +84,21 @@ P136. Checked 2026-10-02: 787 of 913 award books carry a genre.
 
 From epic-03-series-entries. Live data has one: `Q126690200` ("The Unbroken"'s
 series). The card reads "Book 1 of Q126690200".
+
+## ISS-10 — Many recent books have no Wikidata genre
+
+**Raised:** 2026-10-02
+**Status:** open
+**Lands in:** unplanned
+
+From epic-02-genre-filter. Half of today's fantasy list is "genre unknown". A
+manual genre override, or a second source, would close it.
+
+## ISS-11 — "I own this" doubles as "never show again"; a Reject action is missing
+
+**Raised:** 2026-10-02
+**Status:** scheduled
+**Lands in:** phase 05
+
+The user wants a Reject button. On a series entry, Reject drops the whole
+series, while "I own this" moves on to the next book.
