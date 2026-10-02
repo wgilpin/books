@@ -18,7 +18,7 @@ Updated: 2026-10-02
 - concept: approved 2026-10-02
 - explore: approved 2026-10-02
 - architecture: approved 2026-10-02
-- design: pending
+- design: approved 2026-10-02
 - phases: approved 2026-10-02
 
 ## Phases
@@ -27,10 +27,10 @@ Updated: 2026-10-02
   - [x] epic-01-skeleton — merged 2026-10-02
   - [x] epic-02-award-list — merged 2026-10-02
   - [x] epic-03-container — merged 2026-10-02
-- [ ] 02-owned-filter — in progress
+- [x] 02-owned-filter — done
   - [x] epic-01-kindle-import — merged 2026-10-02
   - [x] epic-02-hide-owned — merged 2026-10-02
-  - [x] epic-03-own-button — reviewed 2026-10-02
+  - [x] epic-03-own-button — merged 2026-10-02
 - [ ] 03-series-rule — pending
 - [ ] 04-on-the-internet — pending
 - [ ] 05-triage — pending
@@ -40,3 +40,4 @@ Updated: 2026-10-02
 - The root `concept.md` is the user's first draft. It holds build ideas (schema, sources, UI) for stage 3.
 - Stop condition 1 passed 2026-10-02: `data/kindle_books.csv` holds 2,324 owned books (asin,title,author), scraped from the read.amazon library page by a console script. 939 titles carry store copy after a colon; 668 name a series or book number. `data/` is personal and stays out of git.
 - Spike done 2026-10-02: ISFDB is behind a Cloudflare challenge; Wikidata is the source (ADR 0002). Queries in docs/spikes/wikidata/.
+- The live database is disposable until every phase is done (user, 2026-10-02). Migrations and resets on it are not hazards. Docker commands still need a yes.

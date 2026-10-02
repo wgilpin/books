@@ -47,3 +47,31 @@ From epic-03-container. AC-2 is proved by the `unless-stopped` policy only. Chec
 The list shows names like `Q55434623`: 29 of 913 authors and 5 titles. The
 query asks for English labels only. Likely fix: `wikibase:language "en,mul"`
 in `src/lib/server/sources/wikidata.ts`, with a parser test.
+
+## ISS-6 — The Kindle upload fails above 512 KB
+
+**Raised:** 2026-10-02
+**Status:** open
+**Lands in:** unplanned
+
+From epic-01-kindle-import. adapter-node's default `BODY_SIZE_LIMIT` is 512 KB.
+The real CSV is 218 KB, so a library of about 5,000 books hits the limit.
+
+## ISS-7 — Two books by one author that share the text before a colon match
+
+**Raised:** 2026-10-02
+**Status:** open
+**Lands in:** unplanned
+
+From epic-02-hide-owned. Titles are cut at the first colon on both sides, so
+owning "The Red: First Light" also hides a different "The Red: …" by the same
+author.
+
+## ISS-8 — The list cannot be narrowed to science fiction or to fantasy
+
+**Raised:** 2026-10-02
+**Status:** open
+**Lands in:** unplanned
+
+No phase covers a genre filter. It needs a genre per book, probably Wikidata
+P136; its coverage of the award books is unchecked.
