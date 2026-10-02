@@ -40,8 +40,8 @@ Updated: 2026-10-02
   - [x] epic-02-genre-filter — merged 2026-10-02
 - [ ] 04-on-the-internet — pending
 - [ ] 05-triage — in progress
-  - [x] epic-01-marks — reviewed 2026-10-02
-  - [ ] epic-02-queue — pending
+  - [x] epic-01-marks — merged 2026-10-02
+  - [x] epic-02-queue — reviewed 2026-10-02
 
 ## Notes for a fresh session
 

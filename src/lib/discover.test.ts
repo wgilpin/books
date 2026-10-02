@@ -156,3 +156,14 @@ describe('buildEntries marks', () => {
 		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: marks({ Q3: 'rejected' }) })).toEqual([]);
 	});
 });
+
+describe('buildEntries queue', () => {
+	it('leaves out a series while any of its books is queued, without moving on', () => {
+		expect(buildEntries({ awardBooks: [award(b3, 2024)], members: saga, markOf: marks({ Q1: 'queued' }) })).toEqual([]);
+	});
+
+	it('leaves out a queued standalone book', () => {
+		const lone = work('Q9', 'Lone');
+		expect(buildEntries({ awardBooks: [award(lone, 2024)], members: [], markOf: marks({ Q9: 'queued' }) })).toEqual([]);
+	});
+});

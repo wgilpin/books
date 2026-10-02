@@ -50,3 +50,85 @@ Reordering the queue. Undo.
 ## Notes
 
 The book card moves into `BookCard.svelte` so `/` and `/queue` share it.
+
+---
+
+## Build note — 2026-10-02
+
+**Result:** green
+
+### Tasks done
+
+1. Wrote the tests first: `discover` queue rules, `/queue` load and action,
+   `/queue` render, and the Queue button and header link on `/`.
+2. `discover` leaves out a queued standalone book and any series with a queued
+   member (AC-1, AC-2).
+3. Added `listQueue`, `queueCount` and `markFromForm` to `marks.ts`; both pages
+   use the one form action.
+4. Added `src/routes/+layout.server.ts` (`queueCount`), the `/queue` page, and
+   `BookCard.svelte`, now shared by `/` and `/queue` (AC-3, AC-4, AC-7).
+5. Each card on `/` has Queue; `/` and `/import` link to "Queue (N)" (AC-5,
+   AC-6).
+6. Scratch check: queueing the first entry returned 200; the header showed
+   "Queue (1)"; the book left `/` and showed on `/queue`. Screenshots of `/`
+   and `/queue` at 360px in light mode: buttons wrap cleanly.
+
+### Tests added
+
+- `src/lib/discover.test.ts` — queued series member; queued standalone.
+- `src/routes/queue/page.server.test.ts` — empty; newest first with series
+  line; Read on the queue page removes the book.
+- `src/routes/queue/page.test.ts` — empty notice; card with three marks and no
+  Queue.
+- `src/routes/page.test.ts` — Queue button; header link with count.
+- `src/routes/import/page.test.ts` — header link with count.
+
+### Suite result
+
+`pnpm test` — Test Files 18 passed (18), Tests 133 passed (133).
+`pnpm check` — 0 errors, 0 warnings.
+
+### Deviations from the plan
+
+- The queue link sits in each page's header actions, not inside
+  `PageHeader.svelte`.
+- A series with any queued member leaves the list, not only when the next book
+  is queued.
+- Queued books show no award badges on `/queue`.
+
+### Follow-ups
+
+- Show the award badges on `/queue`.
+
+---
+
+## Review — 2026-10-02
+
+**Verdict:** pass with follow-ups
+
+### Acceptance criteria
+
+| AC | Met | Proved by |
+|---|---|---|
+| AC-1 | yes | `discover.test.ts` — queued series member |
+| AC-2 | yes | `discover.test.ts` — queued standalone |
+| AC-3 | yes | `queue/page.server.test.ts` — newest first with author, Kindle link and series line |
+| AC-4 | yes | `queue/page.test.ts` — empty notice; three marks, no Queue |
+| AC-5 | yes | `page.test.ts`, `import/page.test.ts` — "Queue (N)" link |
+| AC-6 | yes | `page.test.ts` — Queue button with accessible name |
+| AC-7 | yes | `queue/page.server.test.ts` — Read removes the book from the queue |
+
+Suite run by the reviewer: `pnpm test` — 133 passed.
+
+### Drift
+
+None. The design's card, buttons and notices are reused; no JavaScript.
+
+### Findings
+
+- Low: `/queue` cards carry no award badges, so the reason a book was queued is
+  less visible there.
+
+### Follow-ups
+
+- Award badges on `/queue`.

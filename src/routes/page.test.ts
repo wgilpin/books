@@ -167,3 +167,15 @@ describe('/ page marks', () => {
 		}
 	});
 });
+
+describe('/ page queue', () => {
+	it('has a Queue button with the title in its accessible name', () => {
+		expect(page({ books: [book], refresh: null, genre: null })).toMatch(
+			/<button [^>]*name="mark"[^>]*value="queued"[^>]*aria-label="Queue Venomous Lumpsucker"[^>]*>Queue<\/button>/
+		);
+	});
+
+	it('links to the queue with its count in the header', () => {
+		expect(page({ books: [book], refresh: null, genre: null, queueCount: 3 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue \(3\)<\/a>/);
+	});
+});

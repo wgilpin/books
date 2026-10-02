@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AwardBadge from '#lib/components/AwardBadge.svelte';
+	import BookCard from '#lib/components/BookCard.svelte';
 	import PageHeader from '#lib/components/PageHeader.svelte';
 
 	let { data } = $props();
@@ -12,11 +12,6 @@
 	];
 	/** Form actions keep the current filter, so the page comes back filtered. */
 	const action = (name: string) => (genre ? `?genre=${genre}&/${name}` : `?/${name}`);
-
-	/** Award books this entry stands for, when they are not the book shown. */
-	function otherAwardBooks(book: { title: string; awards: { bookTitle?: string }[] }) {
-		return [...new Set(book.awards.map((a) => a.bookTitle).filter((t): t is string => !!t && t !== book.title))];
-	}
 </script>
 
 <svelte:head>
@@ -32,6 +27,7 @@
 		<form class="inline-form" method="POST" action={action('refresh')}>
 			<button class="button button--secondary" type="submit" disabled={running}>Refresh from Wikidata</button>
 		</form>
+		<a class="button button--quiet" href="/queue">Queue ({data.queueCount ?? 0})</a>
 		<a class="button button--quiet" href="/import">Import Kindle library</a>
 	</PageHeader>
 
@@ -53,34 +49,7 @@
 		<ol class="stack">
 			{#each data.books as book}
 				<li>
-					<article class="card">
-						<h2 class="card__title"><a href={book.kindleUrl} rel="noopener noreferrer" target="_blank">{book.title}</a></h2>
-						<p class="card__author">{book.author}</p>
-						<div class="card__badges">
-							{#each book.awards as entry, i (i)}
-								<AwardBadge award={entry.award} year={entry.year} result={entry.result} />
-							{/each}
-							{#if book.genre && !book.genre.sf && !book.genre.fantasy}
-								<span class="tag">genre unknown</span>
-							{/if}
-						</div>
-						{#if book.series}
-							<p class="card__series">Book {book.series.position} of {book.series.name}</p>
-						{/if}
-						{#if otherAwardBooks(book).length}
-							<p class="card__series">Award for {otherAwardBooks(book).join(', ')}</p>
-						{/if}
-						<div class="card__actions">
-							<a class="button button--primary" href={book.kindleUrl} rel="noopener noreferrer" target="_blank">Kindle<span class="sr-only">{' '}(opens in a new tab)</span></a>
-							<form class="inline-form card__marks" method="POST" action={action('mark')}>
-								<input type="hidden" name="source" value={book.source} />
-								<input type="hidden" name="sourceId" value={book.sourceId} />
-								<button class="button button--secondary" type="submit" name="mark" value="owned" aria-label="I own {book.title}">I own this</button>
-								<button class="button button--secondary" type="submit" name="mark" value="read" aria-label="I have read {book.title}">Read</button>
-								<button class="button button--quiet" type="submit" name="mark" value="rejected" aria-label="Reject {book.title}">Reject</button>
-							</form>
-						</div>
-					</article>
+					<BookCard {book} action={action('mark')} marks={['owned', 'read', 'queued', 'rejected']} />
 				</li>
 			{/each}
 		</ol>

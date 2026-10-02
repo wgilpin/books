@@ -30,3 +30,9 @@ describe('/import page design', () => {
 		expect(page({ count: 5, importedAt: 'x' }, { error: 'bad' })).toMatch(/<p class="notice notice--error" role="alert">/);
 	});
 });
+
+describe('/import page queue link', () => {
+	it('links to the queue with its count', () => {
+		expect(page({ count: 1, importedAt: 'x', queueCount: 2 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue \(2\)<\/a>/);
+	});
+});
