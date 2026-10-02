@@ -1,4 +1,4 @@
-import type { Award, AwardRecord, SourceRecords, WorkRecord } from './types';
+import type { AliasRecord, Award, AwardRecord, SourceRecords, WorkRecord } from './types';
 
 export const SOURCE = 'wikidata';
 
@@ -14,21 +14,35 @@ const AWARDS: Record<string, Award> = {
 	Q4836602: 'BSFA'
 };
 
+const awardValues = Object.keys(AWARDS)
+	.map((q) => `wd:${q}`)
+	.join(' ');
+
 /** Award novels with year and result. Same query as docs/spikes/wikidata/award-novels.rq. */
 export const AWARD_NOVELS_QUERY = `
 SELECT ?award ?book ?bookLabel ?authorLabel ?prop ?year WHERE {
-  VALUES ?award { ${Object.keys(AWARDS)
-		.map((q) => `wd:${q}`)
-		.join(' ')} }
+  VALUES ?award { ${awardValues} }
   VALUES (?p ?ps ?prop) { (p:P1411 ps:P1411 "nominated") (p:P166 ps:P166 "won") }
   ?book ?p ?st . ?st ?ps ?award .
   OPTIONAL { ?st pq:P585 ?t . BIND(YEAR(?t) AS ?year) }
   OPTIONAL { ?book wdt:P50 ?author }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul". }
 }`;
 
-export async function fetchAwardNovels(fetchFn: typeof fetch = fetch): Promise<string> {
-	const url = `${ENDPOINT}?query=${encodeURIComponent(AWARD_NOVELS_QUERY)}`;
+/** Other names of award books, for matching store titles. */
+export const ALIASES_QUERY = `
+SELECT DISTINCT ?book ?alias WHERE {
+  VALUES ?award { ${awardValues} }
+  { ?book p:P1411/ps:P1411 ?award } UNION { ?book p:P166/ps:P166 ?award }
+  ?book skos:altLabel ?alias .
+  FILTER(LANG(?alias) IN ("en", "mul"))
+}`;
+
+export const fetchAwardNovels = (fetchFn: typeof fetch = fetch) => runQuery(AWARD_NOVELS_QUERY, fetchFn);
+export const fetchAliases = (fetchFn: typeof fetch = fetch) => runQuery(ALIASES_QUERY, fetchFn);
+
+async function runQuery(query: string, fetchFn: typeof fetch): Promise<string> {
+	const url = `${ENDPOINT}?query=${encodeURIComponent(query)}`;
 	const response = await fetchFn(url, {
 		headers: { Accept: 'application/sparql-results+json', 'User-Agent': USER_AGENT }
 	});
@@ -81,4 +95,11 @@ export function parseAwardNovels(body: string): SourceRecords {
 			.map(({ authors, ...work }) => ({ ...work, author: [...authors].join(', ') })),
 		awards: [...awards.values()]
 	};
+}
+
+export function parseAliases(body: string): AliasRecord[] {
+	const bindings: Binding[] = JSON.parse(body).results.bindings;
+	return bindings
+		.filter((row) => row.book && row.alias)
+		.map((row) => ({ source: SOURCE, workSourceId: qid(row.book!.value), alias: row.alias!.value }));
 }

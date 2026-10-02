@@ -1,0 +1,8 @@
+{
+ "head": { "vars": ["book", "alias"] },
+ "results": { "bindings": [
+  { "book": { "type": "uri", "value": "http://www.wikidata.org/entity/Q133510892" }, "alias": { "xml:lang": "en", "type": "literal", "value": "Venomous Lumpsucker (novel)" } },
+  { "book": { "type": "uri", "value": "http://www.wikidata.org/entity/Q123300220" }, "alias": { "xml:lang": "mul", "type": "literal", "value": "Some Desperate Glory" } },
+  { "book": { "type": "uri", "value": "http://www.wikidata.org/entity/Q999999999" }, "alias": { "xml:lang": "en", "type": "literal", "value": "Not an award book" } }
+ ] }
+}

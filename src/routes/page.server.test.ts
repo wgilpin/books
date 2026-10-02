@@ -1,11 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { getDb } from '#lib/server/db.js';
+import { replaceOwned } from '#lib/server/owned.js';
 import { startRefresh } from '#lib/server/refresh.js';
 import { load } from './+page.server';
 
 const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
-const okFetch = (async () => new Response(fixture)) as typeof fetch;
+const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
+const okFetch = (async (url: string) =>
+	new Response(decodeURIComponent(url).includes('skos:altLabel') ? aliasFixture : fixture)) as typeof fetch;
 const failingFetch = (async () => {
 	throw new Error('network down');
 }) as typeof fetch;
@@ -14,26 +17,45 @@ const run = () => load({} as Parameters<typeof load>[0]) as Promise<Record<strin
 
 describe('/ load', () => {
 	beforeEach(() => {
-		getDb().exec('DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache;');
+		getDb().exec(
+			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned;'
+		);
 	});
 
 	it('returns no books and no refresh on an empty database', async () => {
 		expect(await run()).toEqual({ books: [], refresh: null });
 	});
 
-	it('returns the books newest award year first, each with its entries and Kindle link', async () => {
+	it('returns the ten newest award books, newest award year first, each with entries and Kindle link', async () => {
 		await startRefresh(getDb(), okFetch).done;
 		const { books } = await run();
 
-		expect(books).toHaveLength(36);
+		expect(books).toHaveLength(10);
 		const years = books.map((b: any) => Math.max(...b.awards.map((a: any) => a.year)));
 		expect(years).toEqual([...years].sort((a, b) => b - a));
-		expect(books.find((b: any) => b.title === 'Venomous Lumpsucker')).toEqual({
-			title: 'Venomous Lumpsucker',
-			author: 'Ned Beauman',
-			kindleUrl: 'https://www.amazon.co.uk/s?k=Venomous+Lumpsucker+Ned+Beauman&i=digital-text',
-			awards: [{ award: 'Clarke', year: 2023, result: 'won' }]
+		expect(years.every((y: number) => y === 2024)).toBe(true);
+		expect(books[0]).toEqual({
+			title: expect.any(String),
+			author: expect.any(String),
+			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
+			awards: [expect.objectContaining({ year: 2024 })]
 		});
+	});
+
+	it('leaves out the award books I own, matched by author and title or alias', async () => {
+		await startRefresh(getDb(), okFetch).done;
+		const before = (await run()).books.map((b: any) => b.title);
+
+		replaceOwned(getDb(), [
+			{ asin: 'B1', title: `${before[0]}: A Novel`, authors: [lastFirst((await run()).books[0].author)] },
+			{ asin: 'B2', title: 'Some Desperate Glory', authors: ['Tesh, Emily'] }
+		]);
+		const after = (await run()).books.map((b: any) => b.title);
+
+		expect(after).toHaveLength(10);
+		expect(after).not.toContain(before[0]);
+		expect(after).not.toContain('Q123300220');
+		expect(after).not.toContain('Some Desperate Glory');
 	});
 
 	it('returns the error and keeps the books after a failed refresh', async () => {
@@ -41,7 +63,12 @@ describe('/ load', () => {
 		await startRefresh(getDb(), failingFetch).done;
 		const data = await run();
 
-		expect(data.books).toHaveLength(36);
+		expect(data.books).toHaveLength(10);
 		expect(data.refresh).toMatchObject({ status: 'failed', error: 'network down' });
 	});
 });
+
+function lastFirst(name: string) {
+	const parts = name.split(' ');
+	return `${parts.at(-1)}, ${parts.slice(0, -1).join(' ')}`;
+}
