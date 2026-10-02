@@ -13,6 +13,7 @@
 
 <main>
 	<h1>Award novels</h1>
+	<p><a href="/import">Import Kindle library</a></p>
 
 	<form method="POST" action="?/refresh">
 		<button type="submit" disabled={running}>Refresh from Wikidata</button>
