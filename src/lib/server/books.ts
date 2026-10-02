@@ -1,4 +1,5 @@
-import { buildEntries, type AwardBookInput, type Entry, type SeriesMemberInput } from '../discover';
+import { buildEntries, type AwardBookInput, type Entry, type GenreFilter, type SeriesMemberInput } from '../discover';
+import { classifyGenre } from '../genre';
 import { kindleLink } from '../kindle-link';
 import { ownedIndex, type OwnedBook } from '../match';
 import type { Db } from './db';
@@ -9,13 +10,21 @@ export type AwardBook = Entry & { kindleUrl: string };
  * The list: award books and series I do not own (Kindle match or override), one entry per
  * series, newest award year first, cut to `limit`. The rule itself lives in discover.ts.
  */
-export function listAwardBooks(db: Db, limit = 10): AwardBook[] {
+export function listAwardBooks(db: Db, limit = 10, genre?: GenreFilter): AwardBook[] {
 	const aliases = new Map<number, string[]>();
 	for (const { work_id, alias } of db.prepare('SELECT work_id, alias FROM work_alias').all() as {
 		work_id: number;
 		alias: string;
 	}[]) {
 		aliases.set(work_id, [...(aliases.get(work_id) ?? []), alias]);
+	}
+
+	const labels = new Map<number, string[]>();
+	for (const { work_id, label } of db.prepare('SELECT work_id, label FROM work_genre').all() as {
+		work_id: number;
+		label: string;
+	}[]) {
+		labels.set(work_id, [...(labels.get(work_id) ?? []), label]);
 	}
 
 	const awardRows = db
@@ -33,11 +42,13 @@ export function listAwardBooks(db: Db, limit = 10): AwardBook[] {
 			title: row.title,
 			author: row.author,
 			aliases: aliases.get(row.id) ?? [],
-			awards: []
+			awards: [],
+			genre: { sf: false, fantasy: false }
 		};
 		book.awards.push({ award: row.award, year: row.year, result: row.result });
 		awardBooks.set(row.id, book);
 	}
+	for (const [id, book] of awardBooks) book.genre = classifyGenre(labels.get(id) ?? [], book.awards);
 
 	const members = (
 		db
@@ -66,6 +77,7 @@ export function listAwardBooks(db: Db, limit = 10): AwardBook[] {
 		awardBooks: [...awardBooks.values()],
 		members,
 		owns: (work) => overrides.has(`${work.source}|${work.sourceId}`) || kindle.owns(work),
-		limit
+		limit,
+		genre
 	}).map((entry) => ({ ...entry, kindleUrl: kindleLink(entry.title, entry.author) }));
 }

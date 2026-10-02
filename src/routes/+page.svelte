@@ -4,6 +4,14 @@
 
 	let { data } = $props();
 	const running = $derived(data.refresh?.status === 'running');
+	const genre = $derived(data.genre ?? null);
+	const filters = [
+		{ value: null, label: 'All', href: '/' },
+		{ value: 'sf', label: 'Science fiction', href: '/?genre=sf' },
+		{ value: 'fantasy', label: 'Fantasy', href: '/?genre=fantasy' }
+	];
+	/** Form actions keep the current filter, so the page comes back filtered. */
+	const action = (name: string) => (genre ? `?genre=${genre}&/${name}` : `?/${name}`);
 
 	/** Award books this entry stands for, when they are not the book shown. */
 	function otherAwardBooks(book: { title: string; awards: { bookTitle?: string }[] }) {
@@ -21,11 +29,17 @@
 
 <main>
 	<PageHeader title="Award novels">
-		<form class="inline-form" method="POST" action="?/refresh">
+		<form class="inline-form" method="POST" action={action('refresh')}>
 			<button class="button button--secondary" type="submit" disabled={running}>Refresh from Wikidata</button>
 		</form>
 		<a class="button button--quiet" href="/import">Import Kindle library</a>
 	</PageHeader>
+
+	<nav class="filters" aria-label="Genre">
+		{#each filters as filter (filter.label)}
+			<a href={filter.href} class="filter" aria-current={filter.value === genre ? 'page' : undefined}>{filter.label}</a>
+		{/each}
+	</nav>
 
 	{#if running}
 		<p class="notice notice--progress">Refreshing from Wikidata…</p>
@@ -46,6 +60,9 @@
 							{#each book.awards as entry, i (i)}
 								<AwardBadge award={entry.award} year={entry.year} result={entry.result} />
 							{/each}
+							{#if book.genre && !book.genre.sf && !book.genre.fantasy}
+								<span class="tag">genre unknown</span>
+							{/if}
 						</div>
 						{#if book.series}
 							<p class="card__series">Book {book.series.position} of {book.series.name}</p>
@@ -55,7 +72,7 @@
 						{/if}
 						<div class="card__actions">
 							<a class="button button--primary" href={book.kindleUrl} rel="noopener noreferrer" target="_blank">Kindle<span class="sr-only">{' '}(opens in a new tab)</span></a>
-							<form class="inline-form" method="POST" action="?/own">
+							<form class="inline-form" method="POST" action={action('own')}>
 								<input type="hidden" name="source" value={book.source} />
 								<input type="hidden" name="sourceId" value={book.sourceId} />
 								<button class="button button--secondary" type="submit" aria-label="I own {book.title}">I own this</button>

@@ -1,3 +1,5 @@
+import type { Genre } from './genre';
+
 // The list rule. Pure: plain records in, entries out. "Owned" is whatever `owns` says,
 // which the caller builds from the Kindle match and the overrides.
 
@@ -17,7 +19,10 @@ export interface AwardInput {
 
 export interface AwardBookInput extends WorkInput {
 	awards: AwardInput[];
+	genre: Genre;
 }
+
+export type GenreFilter = 'sf' | 'fantasy';
 
 export interface SeriesMemberInput {
 	seriesKey: string;
@@ -34,6 +39,8 @@ export interface Entry {
 	/** Award entries of the award books this entry stands for, newest first. */
 	awards: (AwardInput & { bookTitle: string })[];
 	series: { name: string; position: number } | null;
+	/** From the award books. Neither flag set means unknown, which every filter keeps. */
+	genre: Genre;
 }
 
 interface Group {
@@ -49,12 +56,14 @@ export function buildEntries({
 	awardBooks,
 	members,
 	owns,
-	limit = 10
+	limit = 10,
+	genre
 }: {
 	awardBooks: AwardBookInput[];
 	members: SeriesMemberInput[];
 	owns: (work: WorkInput) => boolean;
 	limit?: number;
+	genre?: GenreFilter;
 }): Entry[] {
 	const bySeries = new Map<string, SeriesMemberInput[]>();
 	const seriesOfWork = new Map<string, string[]>();
@@ -88,12 +97,22 @@ export function buildEntries({
 	for (const group of ordered) {
 		if (entries.length >= limit) break;
 		const entry = entryFor(group, owns);
-		if (entry) entries.push(entry);
+		if (entry && matches(entry.genre, genre)) entries.push(entry);
 	}
 	return entries;
 }
 
+function matches(genre: Genre, filter?: GenreFilter): boolean {
+	if (!filter) return true;
+	const unknown = !genre.sf && !genre.fantasy;
+	return unknown || genre[filter];
+}
+
 function entryFor(group: Group, owns: (work: WorkInput) => boolean): Entry | null {
+	const genre = {
+		sf: group.books.some((book) => book.genre.sf),
+		fantasy: group.books.some((book) => book.genre.fantasy)
+	};
 	const awards = group.books
 		.flatMap((book) => book.awards.map((a) => ({ ...a, bookTitle: book.title })))
 		.sort((a, b) => b.year - a.year || a.award.localeCompare(b.award));
@@ -101,7 +120,7 @@ function entryFor(group: Group, owns: (work: WorkInput) => boolean): Entry | nul
 	if (!group.members) {
 		const [book] = group.books;
 		if (owns(book)) return null;
-		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null };
+		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null, genre };
 	}
 
 	// The book after the last one I own; the first book when I own none.
@@ -114,6 +133,7 @@ function entryFor(group: Group, owns: (work: WorkInput) => boolean): Entry | nul
 		title: next.work.title,
 		author: next.work.author,
 		awards,
-		series: { name: next.seriesName, position: next.position }
+		series: { name: next.seriesName, position: next.position },
+		genre
 	};
 }

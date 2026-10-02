@@ -12,7 +12,8 @@ const failingFetch = (async () => {
 	throw new Error('network down');
 }) as typeof fetch;
 
-const run = () => load({} as Parameters<typeof load>[0]) as Promise<Record<string, any>>;
+const run = (search = '') =>
+	load({ url: new URL(`http://localhost:3000/${search}`) } as Parameters<typeof load>[0]) as Promise<Record<string, any>>;
 
 describe('/ load', () => {
 	beforeEach(() => {
@@ -22,7 +23,7 @@ describe('/ load', () => {
 	});
 
 	it('returns no books and no refresh on an empty database', async () => {
-		expect(await run()).toEqual({ books: [], refresh: null });
+		expect(await run()).toEqual({ books: [], refresh: null, genre: null });
 	});
 
 	it('returns the ten newest award books, newest award year first, each with entries and Kindle link', async () => {
@@ -40,7 +41,8 @@ describe('/ load', () => {
 			author: expect.any(String),
 			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
 			awards: [expect.objectContaining({ year: 2024 })],
-			series: null
+			series: null,
+			genre: { sf: expect.any(Boolean), fantasy: expect.any(Boolean) }
 		});
 	});
 
@@ -141,5 +143,34 @@ describe('series entries', () => {
 	it('moves the series entry on to the next book when I press I own this', async () => {
 		await own(lockedTomb()!);
 		expect(lockedTomb()).toMatchObject({ title: 'Harrow the Ninth', series: { position: 2 } });
+	});
+});
+
+describe('genre filter', () => {
+	beforeEach(async () => {
+		getDb().exec(
+			'DELETE FROM work_genre; DELETE FROM series_entry; DELETE FROM series; DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
+		);
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	it('lists science fiction and unknown entries for ?genre=sf', async () => {
+		const data = await run('?genre=sf');
+		expect(data.genre).toBe('sf');
+		expect(data.books).toHaveLength(10);
+		expect(data.books.every((b: any) => b.genre.sf || !b.genre.fantasy)).toBe(true);
+	});
+
+	it('lists fantasy and unknown entries for ?genre=fantasy', async () => {
+		const data = await run('?genre=fantasy');
+		expect(data.genre).toBe('fantasy');
+		expect(data.books.length).toBeGreaterThan(0);
+		expect(data.books.every((b: any) => b.genre.fantasy || !b.genre.sf)).toBe(true);
+	});
+
+	it('shows All for an unrecognised genre', async () => {
+		const data = await run('?genre=xyz');
+		expect(data.genre).toBeNull();
+		expect(data.books.map((b: any) => b.title)).toEqual((await run()).books.map((b: any) => b.title));
 	});
 });

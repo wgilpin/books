@@ -36,8 +36,8 @@ Updated: 2026-10-02
   - [x] epic-02-series-data — merged 2026-10-02
   - [x] epic-03-series-entries — merged 2026-10-02
 - [ ] 06-genre-filter — in progress
-  - [x] epic-01-genre-data — reviewed 2026-10-02
-  - [ ] epic-02-genre-filter — pending
+  - [x] epic-01-genre-data — merged 2026-10-02
+  - [x] epic-02-genre-filter — reviewed 2026-10-02
 - [ ] 04-on-the-internet — pending
 - [ ] 05-triage — pending
 

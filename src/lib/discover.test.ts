@@ -2,9 +2,17 @@ import { describe, expect, it } from 'vitest';
 import { buildEntries, type AwardBookInput, type SeriesMemberInput } from './discover';
 
 const work = (id: string, title: string, author = 'Ann Author') => ({ source: 'wikidata', sourceId: id, title, author, aliases: [] });
-const award = (w: ReturnType<typeof work>, year: number, result: 'won' | 'shortlisted' = 'shortlisted', name = 'Hugo'): AwardBookInput => ({
+const UNKNOWN = { sf: false, fantasy: false };
+const award = (
+	w: ReturnType<typeof work>,
+	year: number,
+	result: 'won' | 'shortlisted' = 'shortlisted',
+	name = 'Hugo',
+	genre = UNKNOWN
+): AwardBookInput => ({
 	...w,
-	awards: [{ award: name, year, result }]
+	awards: [{ award: name, year, result }],
+	genre
 });
 const member = (series: string, w: ReturnType<typeof work>, position: number): SeriesMemberInput => ({
 	seriesKey: series,
@@ -89,5 +97,44 @@ describe('buildEntries', () => {
 		const years = entries.map((e) => Math.max(...e.awards.map((a) => a.year)));
 		expect(years).toEqual([...years].sort((a, b) => b - a));
 		expect(entries.filter((e) => e.series?.name === 'Saga')).toHaveLength(1);
+	});
+});
+
+describe('buildEntries genre filter', () => {
+	const SF = { sf: true, fantasy: false };
+	const FANTASY = { sf: false, fantasy: true };
+	const books = [
+		award(work('S1', 'Space'), 2024, 'won', 'Hugo', SF),
+		award(work('F1', 'Dragons'), 2024, 'won', 'Hugo', FANTASY),
+		award(work('B1', 'Both'), 2024, 'won', 'Hugo', { sf: true, fantasy: true }),
+		award(work('U1', 'Unknown'), 2024, 'won', 'Hugo', UNKNOWN)
+	];
+	const titles = (genre?: 'sf' | 'fantasy') =>
+		buildEntries({ awardBooks: books, members: [], owns: ownsIds(), genre }).map((e) => e.title).sort();
+
+	it('keeps science fiction and unknown entries for sf', () => {
+		expect(titles('sf')).toEqual(['Both', 'Space', 'Unknown']);
+	});
+
+	it('keeps fantasy and unknown entries for fantasy', () => {
+		expect(titles('fantasy')).toEqual(['Both', 'Dragons', 'Unknown']);
+	});
+
+	it('keeps every entry with no filter, each carrying its genre', () => {
+		expect(titles()).toEqual(['Both', 'Dragons', 'Space', 'Unknown']);
+		const unknown = buildEntries({ awardBooks: books, members: [], owns: ownsIds() }).find((e) => e.title === 'Unknown');
+		expect(unknown!.genre).toEqual(UNKNOWN);
+	});
+
+	it('gives a series entry the genre of its award books, not of the next book', () => {
+		const entries = buildEntries({
+			awardBooks: [award(b3, 2024, 'won', 'Hugo', FANTASY)],
+			members: saga,
+			owns: ownsIds(),
+			genre: 'fantasy'
+		});
+		expect(entries).toHaveLength(1);
+		expect(entries[0]).toMatchObject({ title: 'One', genre: FANTASY });
+		expect(buildEntries({ awardBooks: [award(b3, 2024, 'won', 'Hugo', FANTASY)], members: saga, owns: ownsIds(), genre: 'sf' })).toEqual([]);
 	});
 });

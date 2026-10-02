@@ -128,3 +128,27 @@ describe('/ page series entry', () => {
 		expect(page({ books: [same], refresh: null })).not.toContain('Award for');
 	});
 });
+
+describe('/ page genre filter', () => {
+	const known = { ...book, genre: { sf: true, fantasy: false } };
+	const unknown = { ...book, title: 'Mystery', genre: { sf: false, fantasy: false } };
+
+	it('links All, Science fiction and Fantasy and marks the current one', () => {
+		const body = page({ books: [known], refresh: null, genre: 'sf' });
+		expect(body).toMatch(/<a href="\/"[^>]*>All<\/a>/);
+		expect(body).toMatch(/<a href="\/\?genre=sf"[^>]*aria-current="page"[^>]*>Science fiction<\/a>/);
+		expect(body).toMatch(/<a href="\/\?genre=fantasy"[^>]*>Fantasy<\/a>/);
+		expect(body.match(/aria-current="page"/g)).toHaveLength(1);
+	});
+
+	it('tags an unknown-genre entry and not a known one', () => {
+		const body = page({ books: [known, unknown], refresh: null, genre: null });
+		expect(body.match(/genre unknown/g)).toHaveLength(1);
+	});
+
+	it('keeps the filter in the forms', () => {
+		const body = page({ books: [known], refresh: null, genre: 'fantasy' });
+		expect(body).toContain('action="?genre=fantasy&amp;/own"');
+		expect(body).toContain('action="?genre=fantasy&amp;/refresh"');
+	});
+});
