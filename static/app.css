@@ -65,3 +65,8 @@ a { color: var(--primary); }
 .filter[aria-current='page'] { background: var(--text); border-color: var(--text); color: var(--bg); }
 .tag { display: inline-block; padding: 2px var(--s-3); border: 1px dashed var(--muted); border-radius: var(--r-pill); color: var(--muted); font-size: var(--fs-14); }
 .card__marks { display: inline-flex; flex-wrap: wrap; gap: var(--s-3); }
+.toggle { padding: var(--s-1) var(--s-4); color: var(--text); font-weight: 600; text-decoration: none; }
+.toggle::before { content: ''; display: inline-block; width: 16px; height: 16px; margin-right: var(--s-2); vertical-align: -3px; border: 2px solid var(--muted); border-radius: 4px; }
+.toggle--on::before { background: var(--primary); border-color: var(--primary); box-shadow: inset 0 0 0 2px var(--surface); }
+.card__genre { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); margin: var(--s-3) 0 0; }
+.button--small { min-height: 32px; padding: 0 var(--s-2); font-size: var(--fs-14); }

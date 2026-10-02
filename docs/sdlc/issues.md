@@ -88,8 +88,8 @@ series). The card reads "Book 1 of Q126690200".
 ## ISS-10 — Many recent books have no Wikidata genre
 
 **Raised:** 2026-10-02
-**Status:** open
-**Lands in:** unplanned
+**Status:** scheduled
+**Lands in:** epic-03-genre-override (phase 06)
 
 From epic-02-genre-filter. Half of today's fantasy list is "genre unknown". A
 manual genre override, or a second source, would close it.
@@ -97,8 +97,26 @@ manual genre override, or a second source, would close it.
 ## ISS-11 — "I own this" doubles as "never show again"; a Reject action is missing
 
 **Raised:** 2026-10-02
-**Status:** scheduled
-**Lands in:** phase 05
+**Status:** fixed 2026-10-02
+**Lands in:** phase 05, proved by `page.server.test.ts` "drops the whole series when I reject its entry" 
 
 The user wants a Reject button. On a series entry, Reject drops the whole
 series, while "I own this" moves on to the next book.
+
+## ISS-12 — Queued books show no award badges on /queue
+
+**Raised:** 2026-10-02
+**Status:** open
+**Lands in:** unplanned
+
+From epic-02-queue. `listQueue` returns no awards, so the queue page hides why
+a book was queued.
+
+## ISS-13 — The list has no way to leave out unknown-genre books
+
+**Raised:** 2026-10-02
+**Status:** scheduled
+**Lands in:** epic-03-genre-override (phase 06), AC-8 to AC-10
+
+The user wants an "Include unknown" control next to the genre filters, on by
+default, that leaves out "genre unknown" books when off.

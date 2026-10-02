@@ -5,13 +5,27 @@
 	let { data } = $props();
 	const running = $derived(data.refresh?.status === 'running');
 	const genre = $derived(data.genre ?? null);
+	const includeUnknown = $derived(data.includeUnknown ?? true);
 	const filters = [
-		{ value: null, label: 'All', href: '/' },
-		{ value: 'sf', label: 'Science fiction', href: '/?genre=sf' },
-		{ value: 'fantasy', label: 'Fantasy', href: '/?genre=fantasy' }
+		{ value: null, label: 'All' },
+		{ value: 'sf', label: 'Science fiction' },
+		{ value: 'fantasy', label: 'Fantasy' }
 	];
+
+	/** The query for a genre and the unknown setting; unknown=0 only when it is off. */
+	function query(g: string | null, unknown: boolean) {
+		const params = [g ? `genre=${g}` : '', unknown ? '' : 'unknown=0'].filter(Boolean);
+		return params.join('&');
+	}
+	const href = (g: string | null, unknown: boolean) => {
+		const q = query(g, unknown);
+		return q ? `/?${q}` : '/';
+	};
 	/** Form actions keep the current filter, so the page comes back filtered. */
-	const action = (name: string) => (genre ? `?genre=${genre}&/${name}` : `?/${name}`);
+	const action = (name: string) => {
+		const q = query(genre, includeUnknown);
+		return q ? `?${q}&/${name}` : `?/${name}`;
+	};
 </script>
 
 <svelte:head>
@@ -33,8 +47,9 @@
 
 	<nav class="filters" aria-label="Genre">
 		{#each filters as filter (filter.label)}
-			<a href={filter.href} class="filter" aria-current={filter.value === genre ? 'page' : undefined}>{filter.label}</a>
+			<a href={href(filter.value, includeUnknown)} class="filter" aria-current={filter.value === genre ? 'page' : undefined}>{filter.label}</a>
 		{/each}
+		<a href={href(genre, !includeUnknown)} class="toggle{includeUnknown ? ' toggle--on' : ''}">Include unknown<span class="sr-only">, {includeUnknown ? 'on' : 'off'}</span></a>
 	</nav>
 
 	{#if running}
@@ -49,7 +64,7 @@
 		<ol class="stack">
 			{#each data.books as book}
 				<li>
-					<BookCard {book} action={action('mark')} marks={['owned', 'read', 'queued', 'rejected']} />
+					<BookCard {book} action={action('mark')} genreAction={action('genre')} marks={['owned', 'read', 'queued', 'rejected']} />
 				</li>
 			{/each}
 		</ol>

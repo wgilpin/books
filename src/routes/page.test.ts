@@ -179,3 +179,31 @@ describe('/ page queue', () => {
 		expect(page({ books: [book], refresh: null, genre: null, queueCount: 3 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue \(3\)<\/a>/);
 	});
 });
+
+describe('/ page genre override and include unknown', () => {
+	const unknown = { ...book, genre: { sf: false, fantasy: false }, awardBooks: [{ source: 'wikidata', sourceId: 'Q133510892' }] };
+	const known = { ...unknown, genre: { sf: true, fantasy: false } };
+
+	it('offers Science fiction, Fantasy and Both on an unknown-genre card only', () => {
+		const body = page({ books: [unknown], refresh: null, genre: null, includeUnknown: true });
+		expect(body).toContain('action="?/genre"');
+		expect(body).toContain('name="work" value="wikidata|Q133510892"');
+		for (const [value, label] of [['sf', 'Science fiction'], ['fantasy', 'Fantasy'], ['both', 'Both']]) {
+			expect(body).toMatch(new RegExp(`<button [^>]*name="genre"[^>]*value="${value}"[^>]*aria-label="Set Venomous Lumpsucker as ${label}"`));
+		}
+		expect(page({ books: [known], refresh: null, genre: null, includeUnknown: true })).not.toContain('?/genre');
+	});
+
+	it('shows Include unknown as on by default, and the toggle keeps the genre', () => {
+		const body = page({ books: [], refresh: null, genre: 'sf', includeUnknown: true });
+		expect(body).toMatch(/<a href="\/\?genre=sf&amp;unknown=0" class="toggle toggle--on">Include unknown<span class="sr-only">, on<\/span><\/a>/);
+	});
+
+	it('keeps Include unknown off in the genre links and the forms', () => {
+		const body = page({ books: [unknown], refresh: null, genre: 'fantasy', includeUnknown: false });
+		expect(body).toMatch(/<a href="\/\?genre=fantasy" class="toggle">Include unknown<span class="sr-only">, off<\/span><\/a>/);
+		expect(body).toContain('href="/?genre=sf&amp;unknown=0"');
+		expect(body).toContain('href="/?unknown=0"');
+		expect(body).toContain('action="?genre=fantasy&amp;unknown=0&amp;/mark"');
+	});
+});
