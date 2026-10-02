@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    image: books-app
+    container_name: books-app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - books-data:/app/data
+
+  backup:
+    image: books-app
+    container_name: books-backup
+    restart: unless-stopped
+    depends_on:
+      - app
+    command: ['sh', '/app/scripts/backup/backup.sh']
+    volumes:
+      - books-data:/app/data
+      - ./backups:/backups
+
+volumes:
+  books-data:
+    name: books-data

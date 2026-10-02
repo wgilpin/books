@@ -25,8 +25,8 @@ Updated: 2026-10-02
 
 - [ ] 01-tracer — in progress
   - [x] epic-01-skeleton — merged 2026-10-02
-  - [x] epic-02-award-list — reviewed 2026-10-02
-  - [ ] epic-03-container — pending
+  - [x] epic-02-award-list — merged 2026-10-02
+  - [x] epic-03-container — reviewed 2026-10-02
 - [ ] 02-owned-filter — pending
 - [ ] 03-series-rule — pending
 - [ ] 04-on-the-internet — pending
