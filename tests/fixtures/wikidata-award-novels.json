@@ -1,0 +1,2481 @@
+{
+ "head": {
+  "vars": [
+   "award",
+   "book",
+   "bookLabel",
+   "authorLabel",
+   "prop",
+   "year",
+   "series",
+   "seriesLabel",
+   "ord"
+  ]
+ },
+ "results": {
+  "bindings": [
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q111619"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ned Beauman"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q277308"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "John Scalzi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q277308"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "John Scalzi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q444362"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nicola Griffith"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q707796"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Christopher Priest"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q940958"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Geoff Ryman"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q1393315"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Herv\u00e9 Le Tellier"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q1712282"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Juliet E. McKenna"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4225496"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Mary Robinette Kowal"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4685389"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4726543"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Aliette de Bodard"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4727534"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q4727534"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4767817"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Annalee Newitz"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q5522892"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Gareth L. Powell"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q6774606"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q6774606"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q7901282"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ursula Vernon"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q7901282"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ursula Vernon"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q16204354"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ann Leckie"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q16204354"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ann Leckie"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q17386413"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Silvia Moreno-Garcia"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q31119808"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Fiona Moore"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q36676832"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "S. L. Huang"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q53411010"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "R.F. Kuang"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q55434623"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q55434623"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q55756656"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Shannon Ali Chakraborty"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q57616141"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nana Kwame Adjei-Brenyah"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q65969383"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q65969383"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q98960258"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ray Nayler"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q98960258"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ray Nayler"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q99328730"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Anomaly"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Herv\u00e9 Le Tellier"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q108753885"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Wole Talabi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q108753885"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Wole Talabi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q109542878"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Isabel Waidner"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q111948867"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Kaiju Preservation Society"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "John Scalzi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114291824"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Legends & Lattes"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Travis Baldree"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114291824"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Legends & Lattes"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Travis Baldree"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114292132"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Travis Baldree"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114292132"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Travis Baldree"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114310172"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Babel"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "R.F. Kuang"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q116814638"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Terraformers"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Annalee Newitz"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117062613"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Spear"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nicola Griffith"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q118903125"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martin MacInnes"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120361808"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q120361808"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120482895"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Translation State"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ann Leckie"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120482895"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Translation State"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ann Leckie"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120617133"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Lucy Kissick"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122166736"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Spare Man"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Mary Robinette Kowal"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nettle & Bone"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ursula Vernon"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nettle & Bone"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ursula Vernon"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122425698"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Daughter of Doctor Moreau"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Silvia Moreno-Garcia"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122452567"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Mountain in the Sea"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ray Nayler"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122452567"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Mountain in the Sea"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ray Nayler"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122834958"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Adventures of Amina al-Sirafi"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Shannon Ali Chakraborty"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123112174"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Starter Villain"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "John Scalzi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123300220"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q123300220"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Emily Tesh"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123300220"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q123300220"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Emily Tesh"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123358191"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "In Ascension"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martin MacInnes"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123701317"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Emily Tesh"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123701317"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Emily Tesh"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123990934"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Chain-Gang All-Stars"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nana Kwame Adjei-Brenyah"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q125198708"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Saint of Bright Doors"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Vajra Chandrasekera"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q125198708"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Saint of Bright Doors"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Vajra Chandrasekera"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q126285210"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Vajra Chandrasekera"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q126285210"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Vajra Chandrasekera"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131382899"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Red Scholar's Wake"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Aliette de Bodard"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131382907"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Descendant Machine"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Gareth L. Powell"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131382916"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Airside"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Christopher Priest"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131382925"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Him"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Geoff Ryman"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131417704"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Water Outlaws"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "S. L. Huang"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131443971"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Shigidi and the Brass Head of Obalufon"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Wole Talabi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131443971"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Shigidi and the Brass Head of Obalufon"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Wole Talabi"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131628734"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Lavanya Lakshminarayan"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q132717446"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Alien Clay"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q133510892"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Venomous Lumpsucker"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Ned Beauman"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q133546558"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Three Eight One"
+    },
+    "authorLabel": {
+     "type": "literal",
+     "value": "Q4727534"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134112780"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Rabbit in the Moon"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Fiona Moore"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134474016"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Green Man's Gift"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Juliet E. McKenna"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134722247"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "The Coral Bones"
+    },
+    "authorLabel": {
+     "type": "literal",
+     "value": "Q55434623"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q4836602"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134722248"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Calypso"
+    },
+    "authorLabel": {
+     "type": "literal",
+     "value": "Q120361808"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740625"
+    },
+    "bookLabel": {
+     "type": "literal",
+     "value": "Q134740625"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740682"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Corey Fah Does Social Mobility"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Isabel Waidner"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740690"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Plutoshine"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Lucy Kissick"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740689"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Analog/Virtual and Other Simulations of Your Future"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Lavanya Lakshminarayan"
+    }
+   },
+   {
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740703"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Metronome"
+    },
+    "authorLabel": {
+     "type": "literal",
+     "value": "Q134740625"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q112787692"
+    },
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773991"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "3"
+    },
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nona the Ninth"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Locked Tomb series"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q112787692"
+    },
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q100773991"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "3"
+    },
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2023"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Nona the Ninth"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Tamsyn Muir"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Locked Tomb series"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q124435017"
+    },
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q137362145"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q266012"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Witch King"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    },
+    "seriesLabel": {
+     "type": "literal",
+     "value": "Q137362145"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q124435017"
+    },
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q137362145"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "year": {
+     "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+     "type": "literal",
+     "value": "2024"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q255032"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "nominated"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Witch King"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Martha Wells"
+    },
+    "seriesLabel": {
+     "type": "literal",
+     "value": "Q137362145"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q30131633"
+    },
+    "series": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q117480419"
+    },
+    "ord": {
+     "type": "literal",
+     "value": "1"
+    },
+    "award": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q708830"
+    },
+    "prop": {
+     "type": "literal",
+     "value": "won"
+    },
+    "bookLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time"
+    },
+    "authorLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Adrian Tchaikovsky"
+    },
+    "seriesLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "Children of Time Series"
+    }
+   }
+  ]
+ }
+}

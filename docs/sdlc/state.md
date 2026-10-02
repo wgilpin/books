@@ -24,8 +24,8 @@ Updated: 2026-10-02
 ## Phases
 
 - [ ] 01-tracer — in progress
-  - [x] epic-01-skeleton — reviewed 2026-10-02
-  - [ ] epic-02-award-list — pending
+  - [x] epic-01-skeleton — merged 2026-10-02
+  - [x] epic-02-award-list — reviewed 2026-10-02
   - [ ] epic-03-container — pending
 - [ ] 02-owned-filter — pending
 - [ ] 03-series-rule — pending
