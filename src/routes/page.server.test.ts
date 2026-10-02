@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getDb } from '#lib/server/db.js';
 import { replaceOwned } from '#lib/server/owned.js';
 import { startRefresh } from '#lib/server/refresh.js';
-import { load } from './+page.server';
+import { actions, load } from './+page.server';
 
 const fixture = readFileSync('tests/fixtures/wikidata-award-novels.json', 'utf8');
 const aliasFixture = readFileSync('tests/fixtures/wikidata-aliases.json', 'utf8');
@@ -18,7 +18,7 @@ const run = () => load({} as Parameters<typeof load>[0]) as Promise<Record<strin
 describe('/ load', () => {
 	beforeEach(() => {
 		getDb().exec(
-			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned;'
+			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
 		);
 	});
 
@@ -35,6 +35,8 @@ describe('/ load', () => {
 		expect(years).toEqual([...years].sort((a, b) => b - a));
 		expect(years.every((y: number) => y === 2024)).toBe(true);
 		expect(books[0]).toEqual({
+			source: 'wikidata',
+			sourceId: expect.stringMatching(/^Q\d+$/),
 			title: expect.any(String),
 			author: expect.any(String),
 			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
@@ -72,3 +74,51 @@ function lastFirst(name: string) {
 	const parts = name.split(' ');
 	return `${parts.at(-1)}, ${parts.slice(0, -1).join(' ')}`;
 }
+
+function own(book: { source: string; sourceId: string }) {
+	const form = new FormData();
+	form.set('source', book.source);
+	form.set('sourceId', book.sourceId);
+	const request = new Request('http://localhost:3000/?/own', { method: 'POST', body: form });
+	return actions.own({ request } as Parameters<typeof actions.own>[0]);
+}
+
+describe('"I own this"', () => {
+	beforeEach(async () => {
+		getDb().exec(
+			'DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
+		);
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	it('hides the book on the next load', async () => {
+		const [first] = (await run()).books;
+		await own(first);
+
+		const titles = (await run()).books.map((b: any) => b.title);
+		expect(titles).toHaveLength(10);
+		expect(titles).not.toContain(first.title);
+	});
+
+	it('keeps the book hidden after a new Kindle import', async () => {
+		const [first] = (await run()).books;
+		await own(first);
+		replaceOwned(getDb(), [{ asin: 'B9', title: 'Something else', authors: ['Other, Author'] }]);
+
+		expect((await run()).books.map((b: any) => b.title)).not.toContain(first.title);
+	});
+
+	it('keeps the book hidden after a refresh', async () => {
+		const [first] = (await run()).books;
+		await own(first);
+		await startRefresh(getDb(), okFetch).done;
+
+		expect((await run()).books.map((b: any) => b.title)).not.toContain(first.title);
+	});
+
+	it('rejects a request with no book', async () => {
+		const request = new Request('http://localhost:3000/?/own', { method: 'POST', body: new FormData() });
+		const result = (await actions.own({ request } as Parameters<typeof actions.own>[0])) as any;
+		expect(result.status).toBe(400);
+	});
+});
