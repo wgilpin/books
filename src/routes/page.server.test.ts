@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeWikidata } from '../../tests/fake-wikidata';
 import { getDb } from '#lib/server/db.js';
+import { listAwardBooks } from '#lib/server/books.js';
 import { replaceOwned } from '#lib/server/owned.js';
 import { startRefresh } from '#lib/server/refresh.js';
 import { actions, load } from './+page.server';
@@ -38,7 +39,8 @@ describe('/ load', () => {
 			title: expect.any(String),
 			author: expect.any(String),
 			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
-			awards: [expect.objectContaining({ year: 2024 })]
+			awards: [expect.objectContaining({ year: 2024 })],
+			series: null
 		});
 	});
 
@@ -118,5 +120,26 @@ describe('"I own this"', () => {
 		const request = new Request('http://localhost:3000/?/own', { method: 'POST', body: new FormData() });
 		const result = (await actions.own({ request } as Parameters<typeof actions.own>[0])) as any;
 		expect(result.status).toBe(400);
+	});
+});
+
+describe('series entries', () => {
+	beforeEach(async () => {
+		getDb().exec(
+			'DELETE FROM series_entry; DELETE FROM series; DELETE FROM work_alias; DELETE FROM award_entry; DELETE FROM work; DELETE FROM refresh_log; DELETE FROM source_cache; DELETE FROM owned; DELETE FROM owned_override;'
+		);
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	const lockedTomb = () => listAwardBooks(getDb(), Infinity).find((b) => b.series?.name === 'Locked Tomb series');
+
+	it('shows book 1 for a series where only a later book was awarded and I own none', () => {
+		expect(lockedTomb()).toMatchObject({ title: 'Gideon the Ninth', series: { position: 1 } });
+		expect(new Set(lockedTomb()!.awards.map((a) => a.bookTitle))).toEqual(new Set(['Nona the Ninth']));
+	});
+
+	it('moves the series entry on to the next book when I press I own this', async () => {
+		await own(lockedTomb()!);
+		expect(lockedTomb()).toMatchObject({ title: 'Harrow the Ninth', series: { position: 2 } });
 	});
 });
