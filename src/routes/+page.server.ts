@@ -5,9 +5,14 @@ import { markOwned } from '#lib/server/owned.js';
 import { latestRefresh, startRefresh } from '#lib/server/refresh.js';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+const GENRES = ['sf', 'fantasy'] as const;
+type GenreParam = (typeof GENRES)[number];
+
+export const load: PageServerLoad = async ({ url }) => {
 	const db = getDb();
-	return { books: listAwardBooks(db), refresh: latestRefresh(db) };
+	const param = url.searchParams.get('genre');
+	const genre = GENRES.includes(param as GenreParam) ? (param as GenreParam) : null;
+	return { books: listAwardBooks(db, 10, genre ?? undefined), refresh: latestRefresh(db), genre };
 };
 
 export const actions: Actions = {
