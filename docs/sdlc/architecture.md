@@ -19,23 +19,25 @@
   versions.
 - My rules: ask before any `docker` command; never use the live database for
   tests; scheduled backups on every live database.
-- ISFDB is a volunteer site. Fetch slowly, and never twice for the same page.
+- Wikidata is a shared public service. Query rarely, cache the results, and
+  never query on a page load.
 
 ## Approaches considered
 
-- **Scrape ISFDB, cache the pages.** One source holds awards, results, series
-  and series order. A few hundred page fetches in total. Trade-off: depends on
-  ISFDB's HTML, which can change.
-- **Load the ISFDB MySQL dump.** No HTML risk. Trade-off: a MySQL container and
-  a large dump to extract a few thousand rows.
-- **Wikipedia for shortlists, plus a second source for series.** Two formats,
-  and a cross-match between them, which is the same problem as Kindle titles.
+- **Scrape ISFDB, cache the pages.** One source for all four facts. Ruled out by
+  the spike: every ISFDB page sits behind a Cloudflare bot challenge.
+- **Load the ISFDB MySQL dump.** No HTML risk. Trade-off: a MySQL container, a
+  large dump, and the download page sits behind the same challenge.
+- **Query Wikidata.** A public SPARQL service built for scripts. Two queries
+  return the shortlists, results, series and series order. Trade-off: series
+  membership lags for recent books.
 
 ## Recommended approach
 
-Scrape ISFDB and cache the raw pages in SQLite. The deciding factor is one
-source for all four facts at a tiny volume. The spike below confirms it before
-the build starts. The dump stays as the fallback.
+Query Wikidata and cache the results in SQLite. The deciding factor: the spike
+got every shortlist from 2015 to 2025 in two queries, with no scraping. The
+series gaps cost little, because most gaps are recent book 1s, which show
+correctly anyway.
 
 ## Stack
 
@@ -52,9 +54,10 @@ the build starts. The dump stays as the fallback.
 - **`sources`** — one module per data source behind a shared interface. Each
   returns plain records: works, award entries, series and series entries, each
   tagged with its source and the source's own id. v1 has one source:
-- **`sources/isfdb`** — fetches award-year pages and series pages, stores the
-  raw HTML in a page cache, and parses it. Parsing never fetches. A rate limit
-  of one request a second.
+- **`sources/wikidata`** — runs two SPARQL queries: award novels with year,
+  result and series; then every member of those series with its position. It
+  stores the raw JSON in a cache table and parses it. Parsing never fetches.
+  The spike queries are in `docs/spikes/wikidata/`.
 - **`kindle`** — parses the CSV from the library export script. The script
   lives in `scripts/kindle-export.js`, so the export stays repeatable.
 - **`match`** — normalises authors and titles and links owned books to works.
@@ -64,7 +67,7 @@ the build starts. The dump stays as the fallback.
   here.
 - **`db`** — the SQLite connection and migrations.
 - **Routes** — `/` the list; `/import` uploads the Kindle CSV; `/refresh`
-  starts an ISFDB refresh in the background and shows its progress. "I own
+  starts a Wikidata refresh in the background and shows its progress. "I own
   this" is a form action on each entry.
 
 The seams are the pure modules and the source interface. `sources` and
@@ -85,7 +88,7 @@ refresh upserts on that pair, so internal ids stay stable across refreshes.
 - **owned_override** — works I ticked as "I own this", keyed by source and
   source_id so it survives a rebuild. It survives every import. This is the only
   data that cannot be rebuilt.
-- **page_cache** — source, URL, fetched time, raw content.
+- **source_cache** — source, query, fetched time, raw response.
 
 ## Key decisions
 
@@ -101,11 +104,14 @@ refresh upserts on that pair, so internal ids stay stable across refreshes.
 - **Refresh runs inside the app**, not as a host script. The database lives in
   the container's volume. A host process writing the same SQLite file across
   the OrbStack VM boundary risks lock trouble.
-- **Source-neutral model, ISFDB only.** Rows carry their source, and sources sit
-  behind one interface, so a second source is a new module with no schema
-  change. Merging several sources is rejected for now: it repeats the fuzzy
-  matching problem between sources, before any source has failed. See
+- **Source-neutral model, Wikidata only.** Rows carry their source, and sources
+  sit behind one interface, so a second source is a new module with no schema
+  change. Merging several sources is rejected for now. See
+  [ADR 0002](../adr/0002-wikidata-as-only-source.md), which supersedes
   [ADR 0001](../adr/0001-source-neutral-isfdb-only.md).
+- **Numbered series entries only.** The series rule ignores members with no
+  position, which drops most short fiction. Positions are decimals, so 4.5
+  sorts between 4 and 5. A book with no English title shows its Wikidata id.
 - **SvelteKit 3, not 2.** Kit 3.0.0 shipped on 2026-10-01. A new project on
   kit 2 faces a migration soon. A day-one bug is the risk, and moving back to
   kit 2.70 early is cheap. TypeScript stays on 6.0, because kit 3 declares
@@ -116,19 +122,26 @@ refresh upserts on that pair, so internal ids stay stable across refreshes.
 
 ## Risks and spikes
 
-- **Spike — ISFDB as the only source.** Question: can a script pull the Clarke
-  and Hugo novel shortlists from 2015 to 2025 from ISFDB, with series name,
-  position and the full series list, in under 200 requests? Time box: half a
-  day. Changes the design if: series pages lack clean positions, or ISFDB
-  blocks the fetch. Then add a second source for the missing fact only, or
-  switch to the dump.
-- **Title variants.** UK and US editions can carry different titles. ISFDB lists
-  variants, so match against those too. The spike checks that they are on the
-  pages it fetches.
+- **Spike result (2026-10-02).** ISFDB pages, wiki and dump downloads sit
+  behind a Cloudflare bot challenge; its REST API has no awards or series.
+  Wikidata, in two queries: 198 award novels from 2015 to 2025, with complete
+  shortlists. 50 carry a series, 48 with a position. Established series list
+  every book in order. Gaps: recent books with no series (*The Tainted Cup*,
+  *Legends & Lattes*), a series with no English name (*Witch King*), and BSFA
+  2020 showing 10 books.
+- **Series gaps.** A later book with no series data shows as itself, not as the
+  next book I need. I fix a gap by editing Wikidata. If gaps hurt in use, add a
+  manual series override.
+- **User agent.** Wikimedia asks scripts to send a user agent that names the
+  tool and a contact. My global rule fixes a generic one. It worked in the
+  spike, but Wikimedia can block it.
+- **Title variants.** UK and US editions can carry different titles. Match
+  against Wikidata's aliases as well as the main title.
 - **The export script breaks** when Amazon changes its page. The checkbox is the
   fallback, and the last import stays in place.
-- **ISFDB HTML changes.** The parsers run against saved fixture pages in tests.
-  A failed refresh rolls back and keeps the old data.
+- **Wikidata data changes.** Anyone can edit it, so a refresh can lose or
+  change a row. The parsers run against saved fixture responses in tests. A
+  failed refresh rolls back and keeps the old data.
 
 ## Open questions
 

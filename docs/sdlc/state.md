@@ -19,12 +19,18 @@ Updated: 2026-10-02
 - explore: approved 2026-10-02
 - architecture: approved 2026-10-02
 - design: pending
-- phases: pending
+- phases: approved 2026-10-02
 
 ## Phases
+
+- [ ] 01-tracer — pending
+- [ ] 02-owned-filter — pending
+- [ ] 03-series-rule — pending
+- [ ] 04-on-the-internet — pending
+- [ ] 05-triage — pending
 
 ## Notes for a fresh session
 
 - The root `concept.md` is the user's first draft. It holds build ideas (schema, sources, UI) for stage 3.
 - Stop condition 1 passed 2026-10-02: `data/kindle_books.csv` holds 2,324 owned books (asin,title,author), scraped from the read.amazon library page by a console script. 939 titles carry store copy after a colon; 668 name a series or book number. `data/` is personal and stays out of git.
-- Spike pending before /sdlc:phases: ISFDB as the only source for awards and series order (see architecture.md).
+- Spike done 2026-10-02: ISFDB is behind a Cloudflare challenge; Wikidata is the source (ADR 0002). Queries in docs/spikes/wikidata/.

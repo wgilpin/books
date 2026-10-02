@@ -1,0 +1,9 @@
+SELECT ?award ?book ?bookLabel ?authorLabel ?prop ?year ?series ?seriesLabel ?ord WHERE {
+  VALUES ?award { wd:Q255032 wd:Q266012 wd:Q708830 wd:Q4836602 }
+  VALUES (?p ?ps ?prop) { (p:P1411 ps:P1411 "nominated") (p:P166 ps:P166 "won") }
+  ?book ?p ?st . ?st ?ps ?award .
+  OPTIONAL { ?st pq:P585 ?t . BIND(YEAR(?t) AS ?year) }
+  OPTIONAL { ?book wdt:P50 ?author }
+  OPTIONAL { ?book p:P179 ?ss . ?ss ps:P179 ?series . OPTIONAL { ?ss pq:P1545 ?ord } }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}

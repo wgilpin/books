@@ -1,6 +1,6 @@
 # 0001 — Source-neutral data model, ISFDB as the only source
 
-**Status:** accepted
+**Status:** superseded by 0002
 **Date:** 2026-10-02
 
 ## Context

@@ -1,0 +1,8 @@
+SELECT ?seriesLabel ?m ?mLabel ?ord ?isfdb WHERE {
+  VALUES ?sname { "The Murderbot Diaries"@en "The Dresden Files"@en "Wayfarers series"@en "Locked Tomb series"@en "Teixcalaan"@en "The Broken Earth"@en "Lady Astronaut"@en "Imperial Radch"@en "Machineries of Empire"@en }
+  ?series rdfs:label ?sname .
+  ?m p:P179 ?st . ?st ps:P179 ?series .
+  OPTIONAL { ?st pq:P1545 ?ord }
+  OPTIONAL { ?m wdt:P1233 ?isfdb }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
