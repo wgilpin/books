@@ -41,8 +41,8 @@ From epic-03-container. AC-2 is proved by the `unless-stopped` policy only. Chec
 ## ISS-5 — Authors with no English label on Wikidata show as a Wikidata id
 
 **Raised:** 2026-10-02
-**Status:** scheduled
-**Lands in:** phase 02, epic-02-hide-owned (DC-7)
+**Status:** fixed 2026-10-02
+**Lands in:** phase 02, epic-02-hide-owned (DC-7), proved by `wikidata.test.ts` "asks for English labels, then the language-neutral mul label (ISS-5)" 
 
 The list shows names like `Q55434623`: 29 of 913 authors and 5 titles. The
 query asks for English labels only. Likely fix: `wikibase:language "en,mul"`

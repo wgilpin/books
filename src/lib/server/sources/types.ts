@@ -17,6 +17,12 @@ export interface AwardRecord {
 	result: 'won' | 'shortlisted';
 }
 
+export interface AliasRecord {
+	source: string;
+	workSourceId: string;
+	alias: string;
+}
+
 export interface SourceRecords {
 	works: WorkRecord[];
 	awards: AwardRecord[];
