@@ -1,0 +1,419 @@
+{
+ "head": {
+  "vars": [
+   "book",
+   "genreLabel"
+  ]
+ },
+ "results": {
+  "bindings": [
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q111948867"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q111948867"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "kaiju"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q112787692"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114291824"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "cozy fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120482895"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122166736"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122425698"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122834958"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q124435017"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q125198708"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q132717446"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fairy tale"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123300220"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q112787692"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114291824"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "cozy fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q116814638"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q120482895"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fairy tale"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122238085"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122452567"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q124435017"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131443971"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q99328730"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131382907"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q131443971"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q132717446"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q122452567"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123300220"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q123990934"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "speculative fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114310172"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q114310172"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "dark academia"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q125198708"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "fantasy"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q30131633"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q30131633"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740689"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   },
+   {
+    "book": {
+     "type": "uri",
+     "value": "http://www.wikidata.org/entity/Q134740690"
+    },
+    "genreLabel": {
+     "xml:lang": "en",
+     "type": "literal",
+     "value": "science fiction"
+    }
+   }
+  ]
+ }
+}

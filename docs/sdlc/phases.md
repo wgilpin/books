@@ -58,6 +58,22 @@ Wikidata.
 
 **Depends on:** phase 02.
 
+## Phase 06 — Genre filter
+
+Added 2026-10-02, after phase 03, from ISS-8. It runs before phase 04.
+
+**Goal:** Narrow the list to science fiction or to fantasy.
+
+**Works after this phase:** I switch `/` between All, Science fiction and
+Fantasy. A book with no known genre shows under both, tagged "genre unknown".
+
+**Not in this phase:** other genres, more than one filter at once, remembering
+the filter between visits.
+
+**Size:** about 15 to 20 minutes.
+
+**Depends on:** phase 03.
+
 ## Phase 04 — On the internet
 
 **Goal:** Use the app away from my Mac.
@@ -72,7 +88,7 @@ one password, and use the list.
 
 **Size:** about 1 hour, plus my own Caddy and Cloudflare steps.
 
-**Depends on:** phase 03, and a passed proof.
+**Depends on:** phase 06, and a passed proof.
 
 ## Phase 05 — Triage
 

@@ -2,15 +2,17 @@ import type { Db } from './db';
 import {
 	fetchAliases,
 	fetchAwardNovels,
+	fetchGenres,
 	fetchSeriesIds,
 	fetchSeriesMembers,
 	parseAliases,
 	parseAwardNovels,
+	parseGenres,
 	parseSeriesIds,
 	parseSeriesMembers,
 	SOURCE
 } from './sources/wikidata';
-import type { AliasRecord, SeriesMemberRecord, SourceRecords } from './sources/types';
+import type { AliasRecord, GenreRecord, SeriesMemberRecord, SourceRecords } from './sources/types';
 
 export interface RefreshStatus {
 	status: 'running' | 'ok' | 'failed';
@@ -40,20 +42,24 @@ export function startRefresh(db: Db, fetchFn: typeof fetch = fetch) {
 		try {
 			const body = await fetchAwardNovels(fetchFn);
 			const aliasBody = await fetchAliases(fetchFn);
+			const genreBody = await fetchGenres(fetchFn);
 			const seriesIdsBody = await fetchSeriesIds(fetchFn);
 			const seriesIds = parseSeriesIds(seriesIdsBody);
 			const seriesBody = seriesIds.length ? await fetchSeriesMembers(seriesIds, fetchFn) : '{"results":{"bindings":[]}}';
 			const records = parseAwardNovels(body);
 			const aliases = parseAliases(aliasBody);
+			const genres = parseGenres(genreBody);
 			const members = parseSeriesMembers(seriesBody);
 			const cache = db.prepare("INSERT INTO source_cache (source, query, fetched_at, body) VALUES (?, ?, datetime('now'), ?)");
 			db.transaction(() => {
 				cache.run(SOURCE, 'award-novels', body);
 				cache.run(SOURCE, 'aliases', aliasBody);
+				cache.run(SOURCE, 'genres', genreBody);
 				cache.run(SOURCE, 'series-ids', seriesIdsBody);
 				cache.run(SOURCE, 'series-members', seriesBody);
 				store(db, records);
 				storeAliases(db, aliases);
+				storeGenres(db, genres);
 				storeSeries(db, members);
 			})();
 			finish.run('ok', null, logId);
@@ -111,6 +117,15 @@ function storeSeries(db: Db, members: SeriesMemberRecord[]) {
 			position: member.position
 		});
 	}
+}
+
+/** Replaces the genre labels of this source's works. Labels of books with no work row are skipped. */
+function storeGenres(db: Db, genres: GenreRecord[]) {
+	db.prepare('DELETE FROM work_genre WHERE work_id IN (SELECT id FROM work WHERE source = ?)').run(SOURCE);
+	const insert = db.prepare(`
+		INSERT OR IGNORE INTO work_genre (work_id, label)
+		SELECT id, @label FROM work WHERE source = @source AND source_id = @workSourceId`);
+	for (const genre of genres) insert.run(genre);
 }
 
 /** Replaces the aliases of this source's works. Aliases of books with no award row are skipped. */

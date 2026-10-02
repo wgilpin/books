@@ -21,7 +21,7 @@ describe('refresh', () => {
 
 		expect(count(db, 'work')).toBe(42);
 		expect(count(db, 'award_entry')).toBe(45);
-		expect(count(db, 'source_cache')).toBe(4);
+		expect(count(db, 'source_cache')).toBe(5);
 		expect(latestRefresh(db)).toMatchObject({ status: 'ok', error: null });
 	});
 
@@ -61,6 +61,20 @@ describe('refresh', () => {
 		expect(count(db, 'series')).toBe(3);
 		expect(count(db, 'series_entry')).toBe(8);
 		expect(count(db, 'work')).toBe(42);
+	});
+
+	it('stores the genre labels of award books once each, across two refreshes', async () => {
+		await startRefresh(db, okFetch).done;
+		await startRefresh(db, okFetch).done;
+
+		expect(count(db, 'work_genre')).toBe(25);
+		const tesh = db
+			.prepare(
+				`SELECT g.label FROM work_genre g JOIN work w ON w.id = g.work_id WHERE w.source_id = 'Q123300220'`
+			)
+			.pluck()
+			.all();
+		expect(tesh).toEqual(['science fiction']);
 	});
 
 	it('adds no duplicates when it runs twice', async () => {

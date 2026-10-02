@@ -70,8 +70,17 @@ author.
 ## ISS-8 — The list cannot be narrowed to science fiction or to fantasy
 
 **Raised:** 2026-10-02
+**Status:** scheduled
+**Lands in:** phase 06
+
+No phase covers a genre filter. It needs a genre per book, probably Wikidata
+P136. Checked 2026-10-02: 787 of 913 award books carry a genre.
+
+## ISS-9 — A series with no English or mul label shows its Wikidata id
+
+**Raised:** 2026-10-02
 **Status:** open
 **Lands in:** unplanned
 
-No phase covers a genre filter. It needs a genre per book, probably Wikidata
-P136; its coverage of the award books is unchecked.
+From epic-03-series-entries. Live data has one: `Q126690200` ("The Unbroken"'s
+series). The card reads "Book 1 of Q126690200".
