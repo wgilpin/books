@@ -100,3 +100,31 @@ describe('/ page design', () => {
 		expect(failed).toMatch(/<p class="notice notice--error" role="alert">/);
 	});
 });
+
+describe('/ page series entry', () => {
+	const entry = {
+		source: 'wikidata',
+		sourceId: 'Q1',
+		title: 'Gideon the Ninth',
+		author: 'Tamsyn Muir',
+		kindleUrl: 'https://www.amazon.co.uk/s?k=x&i=digital-text',
+		awards: [{ award: 'Hugo', year: 2023, result: 'shortlisted', bookTitle: 'Nona the Ninth' }],
+		series: { name: 'Locked Tomb series', position: 1 }
+	};
+
+	it('says which book of which series it is', () => {
+		expect(page({ books: [entry], refresh: null })).toMatch(/<p class="card__series">Book 1 of Locked Tomb series<\/p>/);
+		expect(page({ books: [{ ...entry, series: { name: 'Murderbot', position: 4.5 } }], refresh: null })).toContain(
+			'Book 4.5 of Murderbot'
+		);
+	});
+
+	it('names the award book when the entry shows a different book', () => {
+		expect(page({ books: [entry], refresh: null })).toMatch(/<p class="card__series">Award for Nona the Ninth<\/p>/);
+	});
+
+	it('does not repeat the title when the award book is the book shown', () => {
+		const same = { ...entry, awards: [{ ...entry.awards[0], bookTitle: 'Gideon the Ninth' }] };
+		expect(page({ books: [same], refresh: null })).not.toContain('Award for');
+	});
+});

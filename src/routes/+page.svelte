@@ -4,6 +4,11 @@
 
 	let { data } = $props();
 	const running = $derived(data.refresh?.status === 'running');
+
+	/** Award books this entry stands for, when they are not the book shown. */
+	function otherAwardBooks(book: { title: string; awards: { bookTitle?: string }[] }) {
+		return [...new Set(book.awards.map((a) => a.bookTitle).filter((t): t is string => !!t && t !== book.title))];
+	}
 </script>
 
 <svelte:head>
@@ -38,10 +43,16 @@
 						<h2 class="card__title"><a href={book.kindleUrl} rel="noopener noreferrer" target="_blank">{book.title}</a></h2>
 						<p class="card__author">{book.author}</p>
 						<div class="card__badges">
-							{#each book.awards as entry (entry.award + entry.year)}
-								<AwardBadge {...entry} />
+							{#each book.awards as entry, i (i)}
+								<AwardBadge award={entry.award} year={entry.year} result={entry.result} />
 							{/each}
 						</div>
+						{#if book.series}
+							<p class="card__series">Book {book.series.position} of {book.series.name}</p>
+						{/if}
+						{#if otherAwardBooks(book).length}
+							<p class="card__series">Award for {otherAwardBooks(book).join(', ')}</p>
+						{/if}
 						<div class="card__actions">
 							<a class="button button--primary" href={book.kindleUrl} rel="noopener noreferrer" target="_blank">Kindle<span class="sr-only">{' '}(opens in a new tab)</span></a>
 							<form class="inline-form" method="POST" action="?/own">

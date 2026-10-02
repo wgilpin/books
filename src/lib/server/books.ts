@@ -1,29 +1,15 @@
+import { buildEntries, type AwardBookInput, type Entry, type SeriesMemberInput } from '../discover';
 import { kindleLink } from '../kindle-link';
 import { ownedIndex, type OwnedBook } from '../match';
 import type { Db } from './db';
 
-export interface AwardBook {
-	source: string;
-	sourceId: string;
-	title: string;
-	author: string;
-	kindleUrl: string;
-	awards: { award: string; year: number; result: 'won' | 'shortlisted' }[];
-}
+export type AwardBook = Entry & { kindleUrl: string };
 
-/** Award novels I do not own (by Kindle match or override), newest award year first, then by title, cut to `limit`. */
+/**
+ * The list: award books and series I do not own (Kindle match or override), one entry per
+ * series, newest award year first, cut to `limit`. The rule itself lives in discover.ts.
+ */
 export function listAwardBooks(db: Db, limit = 10): AwardBook[] {
-	const rows = db
-		.prepare(
-			`SELECT w.id, w.source, w.source_id AS sourceId, w.title, w.author, a.award, a.year, a.result,
-			        MAX(a.year) OVER (PARTITION BY w.id) AS newest
-			   FROM work w JOIN award_entry a ON a.work_id = w.id
-			  WHERE NOT EXISTS (
-			        SELECT 1 FROM owned_override o WHERE o.source = w.source AND o.source_id = w.source_id)
-			  ORDER BY newest DESC, w.title, w.id, a.year DESC, a.award`
-		)
-		.all() as { id: number; source: string; sourceId: string; title: string; author: string; award: string; year: number; result: 'won' | 'shortlisted' }[];
-
 	const aliases = new Map<number, string[]>();
 	for (const { work_id, alias } of db.prepare('SELECT work_id, alias FROM work_alias').all() as {
 		work_id: number;
@@ -31,30 +17,55 @@ export function listAwardBooks(db: Db, limit = 10): AwardBook[] {
 	}[]) {
 		aliases.set(work_id, [...(aliases.get(work_id) ?? []), alias]);
 	}
-	const owned = ownedIndex(db.prepare('SELECT title, authors FROM owned').all() as OwnedBook[]);
 
-	const books = new Map<number, AwardBook>();
-	const skipped = new Set<number>();
-	for (const row of rows) {
-		if (skipped.has(row.id)) continue;
-		let book = books.get(row.id);
-		if (!book) {
-			if (owned.owns({ title: row.title, author: row.author, aliases: aliases.get(row.id) ?? [] })) {
-				skipped.add(row.id);
-				continue;
-			}
-			if (books.size >= limit) break;
-			book = {
-				source: row.source,
-				sourceId: row.sourceId,
-				title: row.title,
-				author: row.author,
-				kindleUrl: kindleLink(row.title, row.author),
-				awards: []
-			};
-			books.set(row.id, book);
-		}
+	const awardRows = db
+		.prepare(
+			`SELECT w.id, w.source, w.source_id AS sourceId, w.title, w.author, a.award, a.year, a.result
+			   FROM work w JOIN award_entry a ON a.work_id = w.id
+			  ORDER BY w.id, a.year DESC, a.award`
+		)
+		.all() as { id: number; source: string; sourceId: string; title: string; author: string; award: string; year: number; result: 'won' | 'shortlisted' }[];
+	const awardBooks = new Map<number, AwardBookInput>();
+	for (const row of awardRows) {
+		const book = awardBooks.get(row.id) ?? {
+			source: row.source,
+			sourceId: row.sourceId,
+			title: row.title,
+			author: row.author,
+			aliases: aliases.get(row.id) ?? [],
+			awards: []
+		};
 		book.awards.push({ award: row.award, year: row.year, result: row.result });
+		awardBooks.set(row.id, book);
 	}
-	return [...books.values()];
+
+	const members = (
+		db
+			.prepare(
+				`SELECT s.id AS seriesId, s.name AS seriesName, e.position, w.id, w.source, w.source_id AS sourceId, w.title, w.author
+				   FROM series s JOIN series_entry e ON e.series_id = s.id JOIN work w ON w.id = e.work_id`
+			)
+			.all() as { seriesId: number; seriesName: string; position: number; id: number; source: string; sourceId: string; title: string; author: string }[]
+	).map(
+		(row): SeriesMemberInput => ({
+			seriesKey: String(row.seriesId),
+			seriesName: row.seriesName,
+			position: row.position,
+			work: { source: row.source, sourceId: row.sourceId, title: row.title, author: row.author, aliases: aliases.get(row.id) ?? [] }
+		})
+	);
+
+	const kindle = ownedIndex(db.prepare('SELECT title, authors FROM owned').all() as OwnedBook[]);
+	const overrides = new Set(
+		(db.prepare('SELECT source, source_id AS sourceId FROM owned_override').all() as { source: string; sourceId: string }[]).map(
+			(o) => `${o.source}|${o.sourceId}`
+		)
+	);
+
+	return buildEntries({
+		awardBooks: [...awardBooks.values()],
+		members,
+		owns: (work) => overrides.has(`${work.source}|${work.sourceId}`) || kindle.owns(work),
+		limit
+	}).map((entry) => ({ ...entry, kindleUrl: kindleLink(entry.title, entry.author) }));
 }
