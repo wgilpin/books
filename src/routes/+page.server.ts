@@ -1,7 +1,6 @@
-import { fail } from '@sveltejs/kit';
 import { listAwardBooks } from '#lib/server/books.js';
 import { getDb } from '#lib/server/db.js';
-import { isMark, markBook } from '#lib/server/marks.js';
+import { markFromForm } from '#lib/server/marks.js';
 import { latestRefresh, startRefresh } from '#lib/server/refresh.js';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -20,16 +19,5 @@ export const actions: Actions = {
 		const { started } = startRefresh(getDb());
 		return { started };
 	},
-	mark: async ({ request }) => {
-		const form = await request.formData();
-		const source = form.get('source');
-		const sourceId = form.get('sourceId');
-		const mark = form.get('mark');
-		if (typeof source !== 'string' || typeof sourceId !== 'string' || !source || !sourceId) {
-			return fail(400, { error: 'No book given' });
-		}
-		if (!isMark(mark)) return fail(400, { error: 'Unknown mark' });
-		markBook(getDb(), source, sourceId, mark);
-		return { marked: sourceId, mark };
-	}
+	mark: async ({ request }) => markFromForm(getDb(), request)
 };

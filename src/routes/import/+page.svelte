@@ -12,6 +12,7 @@
 <main>
 	<PageHeader title="Import Kindle library" {meta}>
 		<a class="button button--quiet" href="/">Back to the list</a>
+		<a class="button button--quiet" href="/queue">Queue ({data.queueCount ?? 0})</a>
 	</PageHeader>
 
 	{#if form?.error}

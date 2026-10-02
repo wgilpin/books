@@ -127,12 +127,13 @@ function entryFor(group: Group, markOf: MarkOf): Entry | null {
 	if (!group.members) {
 		const [book] = group.books;
 		const mark = markOf(book);
-		if (done(mark) || mark === 'rejected') return null;
+		if (mark) return null;
 		return { source: book.source, sourceId: book.sourceId, title: book.title, author: book.author, awards, series: null, genre };
 	}
 
-	// Rejecting any book of a series rejects the series (ISS-11).
-	if (group.members.some((m) => markOf(m.work) === 'rejected')) return null;
+	// Rejecting any book of a series rejects the series (ISS-11). A queued book holds its
+	// series on the queue page, so the list does not move on past it.
+	if (group.members.some((m) => markOf(m.work) === 'rejected' || markOf(m.work) === 'queued')) return null;
 
 	// The book after the last one I own or read; the first book when there is none.
 	const lastOwned = Math.max(-Infinity, ...group.members.filter((m) => done(markOf(m.work))).map((m) => m.position));
