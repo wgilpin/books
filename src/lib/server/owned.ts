@@ -20,3 +20,10 @@ export function ownedSummary(db: Db): { count: number; importedAt: string | null
 		null;
 	return { count, importedAt };
 }
+
+/** Marks a work as owned for good. A second mark changes nothing. */
+export function markOwned(db: Db, source: string, sourceId: string) {
+	db.prepare(
+		"INSERT OR IGNORE INTO owned_override (source, source_id, created_at) VALUES (?, ?, datetime('now'))"
+	).run(source, sourceId);
+}

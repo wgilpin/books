@@ -35,6 +35,11 @@
 				<li>
 					<a href={book.kindleUrl} rel="noopener noreferrer" target="_blank">{book.title}</a>
 					— {book.author}
+					<form method="POST" action="?/own">
+						<input type="hidden" name="source" value={book.source} />
+						<input type="hidden" name="sourceId" value={book.sourceId} />
+						<button type="submit">I own this</button>
+					</form>
 					<ul>
 						{#each book.awards as entry (entry.award + entry.year)}
 							<li>{entry.award} {entry.year} · {entry.result}</li>

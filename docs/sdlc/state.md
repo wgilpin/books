@@ -29,8 +29,8 @@ Updated: 2026-10-02
   - [x] epic-03-container — merged 2026-10-02
 - [ ] 02-owned-filter — in progress
   - [x] epic-01-kindle-import — merged 2026-10-02
-  - [x] epic-02-hide-owned — reviewed 2026-10-02
-  - [ ] epic-03-own-button — pending
+  - [x] epic-02-hide-owned — merged 2026-10-02
+  - [x] epic-03-own-button — reviewed 2026-10-02
 - [ ] 03-series-rule — pending
 - [ ] 04-on-the-internet — pending
 - [ ] 05-triage — pending

@@ -5,6 +5,8 @@ import Page from './+page.svelte';
 const page = (data: object) => render(Page, { props: { data } as never }).body;
 
 const book = {
+	source: 'wikidata',
+	sourceId: 'Q133510892',
 	title: 'Venomous Lumpsucker',
 	author: 'Ned Beauman',
 	kindleUrl: 'https://www.amazon.co.uk/s?k=Venomous+Lumpsucker+Ned+Beauman&i=digital-text',
@@ -40,5 +42,15 @@ describe('/ page', () => {
 		});
 		expect(body).toContain('Refresh failed at 2026-10-02 21:05:00: network down');
 		expect(body).toContain('Venomous Lumpsucker');
+	});
+});
+
+describe('/ page "I own this"', () => {
+	it('gives each entry a form that posts its source and id', () => {
+		const body = page({ books: [book], refresh: null });
+		expect(body).toMatch(/<form[^>]*method="POST"[^>]*action="\?\/own"/);
+		expect(body).toMatch(/<input[^>]*type="hidden"[^>]*name="source"[^>]*value="wikidata"/);
+		expect(body).toMatch(/<input[^>]*type="hidden"[^>]*name="sourceId"[^>]*value="Q133510892"/);
+		expect(body).toMatch(/<button[^>]*>I own this<\/button>/);
 	});
 });
