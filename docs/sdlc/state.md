@@ -40,8 +40,8 @@ Updated: 2026-10-04
   - [x] epic-02-genre-filter — merged 2026-10-02
   - [x] epic-03-genre-override — merged 2026-10-02
 - [ ] 04-on-the-internet — in progress
-  - [x] epic-01-password-gate — reviewed 2026-10-04
-  - [ ] epic-02-login-throttle — pending
+  - [x] epic-01-password-gate — merged 2026-10-04
+  - [x] epic-02-login-throttle — reviewed 2026-10-04
   - [ ] epic-03-public-route — pending
 - [x] 05-triage — done
   - [x] epic-01-marks — merged 2026-10-02

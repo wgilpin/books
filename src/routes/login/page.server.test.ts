@@ -1,7 +1,8 @@
 import { isRedirect } from '@sveltejs/kit';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TEST_PASSWORD, TEST_SECRET } from '../../../tests/setup-env';
 import { verifySession } from '#lib/server/session.js';
+import { loginThrottle } from '#lib/server/throttle.js';
 import { actions } from './+page.server';
 
 type Set = { name: string; value: string; options: Record<string, unknown> };
@@ -22,6 +23,8 @@ async function login(password: string | null) {
 }
 
 describe('/login', () => {
+	beforeEach(() => loginThrottle.reset());
+
 	it('sets a 30-day HttpOnly session cookie and goes to the list for the right password', async () => {
 		const { result, set } = await login(TEST_PASSWORD);
 
@@ -51,5 +54,24 @@ describe('/login', () => {
 	it('puts no trace of the password in the cookie', async () => {
 		const { set } = await login(TEST_PASSWORD);
 		expect(JSON.stringify(set)).not.toContain(TEST_PASSWORD);
+	});
+});
+
+describe('/login throttle', () => {
+	beforeEach(() => loginThrottle.reset());
+
+	it('refuses even the right password after five wrong ones, and sets no cookie', async () => {
+		for (let i = 0; i < 5; i++) expect((await login('wrong')).result.status).toBe(400);
+
+		const { result, set } = await login(TEST_PASSWORD);
+
+		expect(result.status).toBe(429);
+		expect(result.data).toEqual({ error: 'Too many attempts. Try again later.' });
+		expect(set).toHaveLength(0);
+	});
+
+	it('logs in after four wrong passwords', async () => {
+		for (let i = 0; i < 4; i++) await login('wrong');
+		expect((await login(TEST_PASSWORD)).result).toMatchObject({ status: 303, location: '/' });
 	});
 });
