@@ -1,7 +1,7 @@
 # SDLC state
 
 Project: books — speculative fiction discovery
-Updated: 2026-10-02
+Updated: 2026-10-04
 
 ## Stack
 
@@ -39,7 +39,10 @@ Updated: 2026-10-02
   - [x] epic-01-genre-data — merged 2026-10-02
   - [x] epic-02-genre-filter — merged 2026-10-02
   - [x] epic-03-genre-override — merged 2026-10-02
-- [ ] 04-on-the-internet — pending
+- [ ] 04-on-the-internet — in progress
+  - [x] epic-01-password-gate — reviewed 2026-10-04
+  - [ ] epic-02-login-throttle — pending
+  - [ ] epic-03-public-route — pending
 - [x] 05-triage — done
   - [x] epic-01-marks — merged 2026-10-02
   - [x] epic-02-queue — merged 2026-10-02

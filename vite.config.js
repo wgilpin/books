@@ -13,6 +13,7 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],
 		environment: 'node',
+		setupFiles: ['tests/setup-env.ts'],
 		// Tests run on a dedicated in-memory database, never the live file.
 		env: { DATABASE_PATH: ':memory:' }
 	}

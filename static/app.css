@@ -72,3 +72,4 @@ a { color: var(--primary); }
 .button--small { min-height: 32px; padding: 0 var(--s-2); font-size: var(--fs-14); }
 .more { display: flex; justify-content: center; margin: var(--s-6) 0 0; }
 li[id^='book-'] { scroll-margin-top: var(--s-4); }
+.picker input[type='password'] { min-height: 40px; padding: 0 var(--s-3); border: 2px solid var(--border); border-radius: var(--r-control); background: var(--surface); color: var(--text); font: inherit; }

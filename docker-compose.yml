@@ -6,6 +6,9 @@ services:
     restart: unless-stopped
     ports:
       - '3000:3000'
+    # APP_PASSWORD and SESSION_SECRET. The server refuses to start without them.
+    env_file:
+      - .env
     volumes:
       - books-data:/app/data
 
