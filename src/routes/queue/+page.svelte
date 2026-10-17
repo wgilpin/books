@@ -9,7 +9,7 @@
 
 <main>
 	<PageHeader title="Queue" meta="Books you queued, newest first.">
-		<a class="button button--quiet" href="/">Back to the list</a>
+		<a class="tab" href="/">Back to the list</a>
 	</PageHeader>
 
 	{#if data.books.length > 0}

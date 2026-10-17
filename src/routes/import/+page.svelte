@@ -11,8 +11,8 @@
 
 <main>
 	<PageHeader title="Import Kindle library" {meta}>
-		<a class="button button--quiet" href="/">Back to the list</a>
-		<a class="button button--quiet" href="/queue">Queue ({data.queueCount ?? 0})</a>
+		<a class="tab" href="/">Back to the list</a>
+		<a class="tab" href="/queue">Queue <span class="count">{data.queueCount ?? 0}</span></a>
 	</PageHeader>
 
 	{#if form?.error}
@@ -21,7 +21,7 @@
 		<p class="notice">Imported {form.imported} books.</p>
 	{/if}
 
-	<form class="card stack" method="POST" enctype="multipart/form-data">
+	<form class="panel" method="POST" enctype="multipart/form-data">
 		<label class="picker">
 			Kindle library CSV
 			<input type="file" name="file" accept=".csv,text/csv" required />

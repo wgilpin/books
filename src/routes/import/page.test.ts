@@ -33,6 +33,6 @@ describe('/import page design', () => {
 
 describe('/import page queue link', () => {
 	it('links to the queue with its count', () => {
-		expect(page({ count: 1, importedAt: 'x', queueCount: 2 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue \(2\)<\/a>/);
+		expect(page({ count: 1, importedAt: 'x', queueCount: 2 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue <span class="count">2<\/span><\/a>/);
 	});
 });

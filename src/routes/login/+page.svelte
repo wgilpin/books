@@ -13,7 +13,7 @@
 		<p class="notice notice--error" role="alert">{form.error}</p>
 	{/if}
 
-	<form class="card stack" method="POST">
+	<form class="panel" method="POST">
 		<label class="picker">
 			Password
 			<input type="password" name="password" autocomplete="current-password" required />

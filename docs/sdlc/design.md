@@ -1,9 +1,10 @@
 # Design — books (speculative fiction discovery)
 
-**Look:** bold, big-type, award-coloured
+**Look:** a quiet reading list — covers, serif titles, colour only for wins
 
-No cover images and no cover metaphor: the app has no cover data. Boldness
-comes from large titles, cards, and a strong colour per award on the badges.
+Restyled 2026-10-17. Each book is a row with its cover, split from the next by
+a rule. One filled button per row (Kindle); the rest are icons or sit in a More
+menu. Colour marks an award win and nothing else.
 
 ## Surfaces
 
@@ -16,46 +17,66 @@ comes from large titles, cards, and a strong colour per award on the badges.
 
 ## Primary flow
 
-1. Open the list. The header shows the last refresh and a link to import.
-2. Scan ten book cards, newest award first.
-3. Tap a title or "Kindle" to open the Kindle UK search in a new tab, or tap
-   "I own this" to hide the card.
+1. Open the list. The header shows the last refresh, the queue count, a
+   refresh icon, and a More menu with the import link.
+2. Scan ten book rows, newest award first.
+3. Tap a title, cover or "Kindle" to open the Kindle UK search in a new tab.
+   Tap the bookmark to queue or the tick to mark read. "I own this", "Reject"
+   and the genre buttons are in the row's More menu.
 4. When the owned list is stale, open Import, pick `kindle_books.csv`, import,
    and go back to the list.
 
 ## Tokens
 
-- Colour, light mode: background `#F4F1EA`, surface `#FFFFFF`, text
-  `#17161C`, muted text `#5E5B66`, border `#E2DED3`, primary `#1F4FD8`,
-  primary text `#FFFFFF`, danger `#B42318`.
+- Colour, light mode: background `#FAF9F7`, surface `#FFFFFF`, hover
+  `#F0EEE9`, text `#1A1A1F`, muted text `#66636D`, border `#E7E4DE`, strong
+  border `#CFCBC2`, primary `#1F4FD8`, primary text `#FFFFFF`, danger
+  `#B42318`.
 - Colour, dark mode (from `prefers-color-scheme: dark`): background
-  `#14131A`, surface `#1E1D26`, text `#F2F0EA`, muted text `#A7A3B0`, border
-  `#2E2C38`, primary `#7FA2FF`, primary text `#0B1020`, danger `#FF8A80`.
-- Award colours, both modes, white text: Hugo `#C2410C`, Nebula `#6D28D9`,
-  Clarke `#0F766E`, BSFA `#BE123C`.
-- Type: family `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`; no
-  web fonts. Scale 14px, 16px, 20px, 28px, 36px. Body 16px / 1.5. Book title
-  28px, weight 800, line height 1.15; 24px below 480px. Page heading 36px,
-  weight 800.
-- Spacing: base 4px. Steps 4, 8, 12, 16, 24, 32, 48px.
-- Radius: 6px buttons and inputs, 14px cards, 999px badges.
-- Shadow: light mode cards `0 1px 2px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0
-  / 0.08)`; dark mode none, a 1px border instead.
+  `#141318`, surface `#1C1B22`, hover `#26252E`, text `#F2F0EA`, muted text
+  `#A7A3B0`, border `#2A2932`, strong border `#3D3B47`, primary `#7FA2FF`,
+  primary text `#0B1020`, danger `#FF8A80`.
+- Award colours, both modes, white text, wins only: Hugo and Locus First
+  `#C2410C`; Nebula, Locus Fantasy and World Fantasy `#6D28D9`; Clarke and
+  Locus SF `#0F766E`; BSFA, British Fantasy and Mythopoeic `#BE123C`.
+- Type: sans `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`; serif
+  for headings and titles `"Iowan Old Style", Charter, "Palatino Linotype",
+  Palatino, Georgia, serif`. No web fonts. Scale 13, 14, 16, 22, 32px. Body
+  16px / 1.5. Book title serif 22px, weight 600, line height 1.2; 20px below
+  480px. Page heading serif 32px, weight 600; 28px below 480px.
+- Spacing: base 4px. Steps 4, 8, 12, 16, 20, 24, 32, 48px.
+- Radius: 8px buttons and menus, 4px covers, 999px badges and chips.
+- Shadow: covers `0 1px 3px rgb(0 0 0 / 0.18)` in light mode only; menus
+  `0 4px 16px` black at 12% (light) or 50% (dark).
 
 ## Components
 
-- **Page header** — app name, last-refresh line, refresh button, import link.
-  On every page.
-- **Book card** — title (link), author, award badges, series line (phase 03),
-  actions row. On List and Queue.
-- **Award badge** — pill with award and year. Variants: `won` (filled award
-  colour, white text, "won" suffix) and `shortlisted` (award-colour outline,
-  normal text colour, so it keeps 4.5:1 contrast in dark mode). In book cards.
-- **Button** — variants: `primary` (filled), `secondary` (outline), `quiet`
-  (text only). "Kindle" is primary; "I own this" is secondary; refresh is
-  secondary.
+- **Page header** — serif title and a small last-refresh line on the left;
+  on the right a Queue tab with a count, a refresh icon button and a More
+  menu holding "Import Kindle library". On every page.
+- **Book card** — a row: 80×120 cover on the left (64×96 below 480px); then
+  title (link), author, series line, grouped award badges, a collapsed
+  "Series awards" note when the awards went to other books in the series,
+  and the actions row. On List and Queue.
+- **Cover** — `/cover/<source>/<id>` looks up the work on Open Library once
+  (title and first author), caches the cover id in `work_cover`, and
+  redirects to `covers.openlibrary.org`. With no cover, it serves an SVG
+  placeholder with the title's first letter.
+- **Award badge** — one pill per award. One entry shows "Hugo 2024"; several
+  show "Hugo ×3 · 2006–2009". The tooltip and screen-reader text list every
+  year and result. Any win fills the pill in the award colour with a ★; a
+  shortlisting alone is a neutral outline.
+- **Button** — `primary` (filled; Kindle, Import, Log in), `secondary`
+  (outline; Show 10 more), `small` size. **Icon button** — 34px square, muted
+  icon, for Queue, Read, Refresh and More. **Chip** — small pill for the
+  genre choice; the current genre is filled and disabled.
+- **Menu** — a `<details>` element, so it needs no script. Holds "I own this",
+  "Reject" and the genre chips on a card, and the import link in the header.
+  The genre chips show on the card itself only while the genre is unknown.
 - **Notice** — one-line message. Variants: `info`, `progress`, `error` (danger
-  colour, `role="alert"`). Refresh state, import result.
+  colour, `role="alert"`). Refresh progress and errors, import result. The
+  last refresh time is header meta, not a notice.
+- **Panel** — bordered box for the Import and Login forms.
 - **File picker** — native file input with a label, styled as a secondary
   button. On Import.
 
@@ -74,8 +95,9 @@ comes from large titles, cards, and a strong colour per award on the badges.
 
 ## Responsive
 
-Single column. Cards fill the width up to 720px, centred. Smallest supported
-width 360px. Below 480px, titles drop to 24px and the actions row wraps.
+Single column, up to 720px, centred. Smallest supported width 360px. Below
+480px the cover shrinks to 64×96, titles drop to 20px, badges and the header
+actions wrap.
 
 ## Accessibility
 
@@ -83,8 +105,11 @@ width 360px. Below 480px, titles drop to 24px and the actions row wraps.
   white text.
 - Focus: a 3px primary-colour outline with a 2px offset on every link, button
   and input.
-- Keyboard: tab order is header, then each card's title, Kindle, I own this.
-- Each "I own this" button carries the book title in its accessible name.
+- Keyboard: tab order is header, then each card's title, Kindle, Queue, Read,
+  More. The cover link is out of the tab order, because the title link goes
+  to the same place.
+- Every mark button and the More menu carry the book title in their
+  accessible name. Icon buttons have a `title` tooltip too.
 - External links open in a new tab and say so to screen readers.
 
 ## Where the screens live
@@ -99,4 +124,5 @@ width 360px. Below 480px, titles drop to 24px and the actions row wraps.
 
 ## Out of scope
 
-Cover images. Custom fonts. Animations beyond a hover state. A settings page.
+Web fonts. Animations beyond a hover state. A settings page. A publication
+year on the card: Wikidata data in the app has award years only.

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import BookCard from '#lib/components/BookCard.svelte';
+	import Icon from '#lib/components/Icon.svelte';
 	import PageHeader from '#lib/components/PageHeader.svelte';
 
 	let { data } = $props();
@@ -39,12 +40,17 @@
 </svelte:head>
 
 <main>
-	<PageHeader title="Award novels">
+	<PageHeader title="Award novels" meta={data.refresh?.status === 'ok' ? `Last refreshed ${data.refresh.finishedAt}` : undefined}>
+		<a class="tab" href="/queue">Queue <span class="count">{data.queueCount ?? 0}</span></a>
 		<form class="inline-form" method="POST" action={action('refresh')}>
-			<button class="button button--secondary" type="submit" disabled={running}>Refresh from Wikidata</button>
+			<button class="icon-button" type="submit" disabled={running} aria-label="Refresh from Wikidata" title="Refresh from Wikidata"><Icon name="refresh" /></button>
 		</form>
-		<a class="button button--quiet" href="/queue">Queue ({data.queueCount ?? 0})</a>
-		<a class="button button--quiet" href="/import">Import Kindle library</a>
+		<details class="menu">
+			<summary class="icon-button" aria-label="More" title="More"><Icon name="more" /></summary>
+			<div class="menu__panel">
+				<a class="menu__item" href="/import">Import Kindle library</a>
+			</div>
+		</details>
 	</PageHeader>
 
 	<nav class="filters" aria-label="Genre">
@@ -58,8 +64,6 @@
 		<p class="notice notice--progress">Refreshing from Wikidata…</p>
 	{:else if data.refresh?.status === 'failed'}
 		<p class="notice notice--error" role="alert">Refresh failed at {data.refresh.finishedAt}: {data.refresh.error}</p>
-	{:else if data.refresh?.status === 'ok'}
-		<p class="notice">Last refreshed {data.refresh.finishedAt}.</p>
 	{/if}
 
 	{#if data.books.length > 0}

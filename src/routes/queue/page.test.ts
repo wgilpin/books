@@ -23,7 +23,7 @@ describe('/queue page', () => {
 		const body = page({ books: [book], queueCount: 1 });
 		expect(body).toContain('Gideon the Ninth');
 		expect(body).toContain('Book 1 of Locked Tomb series');
-		expect(body).toMatch(/<a class="button button--primary"[^>]*>Kindle/);
+		expect(body).toMatch(/<a class="button button--primary[^"]*"[^>]*>Kindle/);
 		for (const value of ['owned', 'read', 'rejected']) expect(body).toContain(`value="${value}"`);
 		expect(body).not.toContain('value="queued"');
 		expect(body).toContain('action="?/mark"');

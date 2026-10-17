@@ -1,7 +1,7 @@
 <script lang="ts">
-	let { award, year, result }: { award: string; year: number; result: 'won' | 'shortlisted' } = $props();
-	const won = $derived(result === 'won');
-	const slug = $derived(award.toLowerCase().replaceAll(' ', '-'));
+	import type { AwardGroup } from '#lib/awards.js';
+	let { group }: { group: AwardGroup } = $props();
+	const slug = $derived(group.award.toLowerCase().replaceAll(' ', '-'));
 </script>
 
-<span class="badge badge--{slug}{won ? ' badge--won' : ''}">{award} {year}{won ? ' · won' : ''}</span>
+<span class="badge badge--{slug}{group.won ? ' badge--won' : ''}" title="{group.award}: {group.detail}">{group.won ? '★ ' : ''}{group.label}<span class="sr-only">, {group.detail}</span></span>

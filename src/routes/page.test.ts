@@ -18,14 +18,14 @@ describe('/ page', () => {
 		const body = page({ books: [], refresh: null });
 		expect(body).toContain('No award data yet');
 		expect(body).toMatch(/<form[^>]*method="POST"[^>]*action="\?\/refresh"/);
-		expect(body).toMatch(/<button[^>]*type="submit"[^>]*>Refresh from Wikidata<\/button>/);
+		expect(body).toMatch(/<button[^>]*type="submit"[^>]*aria-label="Refresh from Wikidata"/);
 	});
 
 	it('shows each book with its awards and a Kindle link', () => {
 		const body = page({ books: [book], refresh: { status: 'ok', finishedAt: '2026-10-02 21:00:00', error: null } });
 		expect(body).toContain('Venomous Lumpsucker');
 		expect(body).toContain('Ned Beauman');
-		expect(body).toContain('Clarke 2023 · won');
+		expect(body).toMatch(/<span class="badge badge--clarke badge--won"[^>]*>★ Clarke 2023<span class="sr-only">, won 2023<\/span><\/span>/);
 		expect(body).toContain(`href="${book.kindleUrl.replaceAll('&', '&amp;')}"`);
 	});
 
@@ -68,26 +68,43 @@ describe('/ page design', () => {
 
 	it('shows a filled badge for a win and an outlined badge for a shortlisting, in the award class', () => {
 		const body = page({ books: [twoAwards], refresh: ok });
-		expect(body).toMatch(/<span class="badge badge--hugo badge--won"[^>]*>Hugo 2024 · won<\/span>/);
-		expect(body).toMatch(/<span class="badge badge--nebula"[^>]*>Nebula 2024<\/span>/);
-		expect(body).toMatch(/<span class="badge badge--locus-sf"[^>]*>Locus SF 2024<\/span>/);
+		expect(body).toMatch(/<span class="badge badge--hugo badge--won"[^>]*>★ Hugo 2024</);
+		expect(body).toMatch(/<span class="badge badge--nebula"[^>]*>Nebula 2024</);
+		expect(body).toMatch(/<span class="badge badge--locus-sf"[^>]*>Locus SF 2024</);
 	});
 
-	it('puts the title link, author, a primary Kindle link and a secondary I own this button in a card', () => {
+	it('folds repeats of one award into one badge with a count and a year range', () => {
+		const repeats = {
+			...book,
+			awards: [
+				{ award: 'Hugo', year: 2009, result: 'shortlisted' },
+				{ award: 'Hugo', year: 2008, result: 'won' },
+				{ award: 'Hugo', year: 2006, result: 'shortlisted' }
+			]
+		};
+		const body = page({ books: [repeats], refresh: ok });
+		expect(body.match(/class="badge /g)).toHaveLength(1);
+		expect(body).toMatch(/title="Hugo: won 2008; shortlisted 2006, 2009">★ Hugo ×3 · 2006–2009</);
+	});
+
+	it('puts a cover, the title link, author, a primary Kindle link, icon buttons and a More menu in a card', () => {
 		const body = page({ books: [book], refresh: ok });
 		expect(body).toMatch(/<article class="card"/);
+		expect(body).toMatch(/<img src="\/cover\/wikidata\/Q133510892\?title=Venomous%20Lumpsucker" alt="" loading="lazy"/);
 		expect(body).toMatch(/<h2 class="card__title"><a [^>]*>Venomous Lumpsucker<\/a><\/h2>/);
 		expect(body).toMatch(/<p class="card__author">Ned Beauman<\/p>/);
-		expect(body).toMatch(/<a class="button button--primary"[^>]*>Kindle/);
-		expect(body).toMatch(/<button class="button button--secondary"[^>]*>I own this<\/button>/);
-		expect(body).toMatch(/<button class="button button--secondary"[^>]*>Read<\/button>/);
-		expect(body).toMatch(/<button class="button button--quiet"[^>]*>Reject<\/button>/);
+		expect(body).toMatch(/<a class="button button--primary[^"]*"[^>]*>Kindle/);
+		expect(body).toMatch(/<button class="icon-button"[^>]*value="queued"/);
+		expect(body).toMatch(/<button class="icon-button"[^>]*value="read"/);
+		expect(body).toMatch(/<details class="menu"><summary [^>]*aria-label="More actions for Venomous Lumpsucker"/);
+		expect(body).toMatch(/<button class="menu__item"[^>]*>I own this<\/button>/);
+		expect(body).toMatch(/<button class="menu__item"[^>]*>Reject<\/button>/);
 	});
 
 	it('names the book in the I own this button and says the Kindle link opens a new tab', () => {
 		const body = page({ books: [book], refresh: ok });
 		expect(body).toMatch(/<button [^>]*aria-label="I own Venomous Lumpsucker"/);
-		expect(body).toMatch(/<a class="button button--primary"[^>]*target="_blank"[^>]*>Kindle<span class="sr-only"> \(opens in a new tab\)<\/span><\/a>/);
+		expect(body).toMatch(/<a class="button button--primary[^"]*"[^>]*target="_blank"[^>]*>Kindle<span class="sr-only"> \(opens in a new tab\)<\/span><\/a>/);
 	});
 
 	it('says I own every award book when a refresh succeeded and no book is left', () => {
@@ -96,10 +113,11 @@ describe('/ page design', () => {
 		expect(body).not.toContain('No award data yet');
 	});
 
-	it('uses the page header and a notice for the refresh state', () => {
+	it('puts the last refresh in the header and uses a notice for an error', () => {
 		const body = page({ books: [book], refresh: ok });
 		expect(body).toMatch(/<header class="header"/);
-		expect(body).toMatch(/<p class="notice">Last refreshed 2026-10-02 21:00:00\.<\/p>/);
+		expect(body).toMatch(/<p class="header__meta">Last refreshed 2026-10-02 21:00:00<\/p>/);
+		expect(body).not.toContain('class="notice"');
 		const failed = page({ books: [book], refresh: { status: 'failed', finishedAt: 'x', error: 'boom' } });
 		expect(failed).toMatch(/<p class="notice notice--error" role="alert">/);
 	});
@@ -173,12 +191,12 @@ describe('/ page marks', () => {
 describe('/ page queue', () => {
 	it('has a Queue button with the title in its accessible name', () => {
 		expect(page({ books: [book], refresh: null, genre: null })).toMatch(
-			/<button [^>]*name="mark"[^>]*value="queued"[^>]*aria-label="Queue Venomous Lumpsucker"[^>]*>Queue<\/button>/
+			/<button [^>]*name="mark"[^>]*value="queued"[^>]*aria-label="Queue Venomous Lumpsucker"[^>]*title="Queue"/
 		);
 	});
 
 	it('links to the queue with its count in the header', () => {
-		expect(page({ books: [book], refresh: null, genre: null, queueCount: 3 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue \(3\)<\/a>/);
+		expect(page({ books: [book], refresh: null, genre: null, queueCount: 3 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue <span class="count">3<\/span><\/a>/);
 	});
 });
 
