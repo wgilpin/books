@@ -11,7 +11,13 @@ const AWARDS: Record<string, Award> = {
 	Q255032: 'Hugo',
 	Q266012: 'Nebula',
 	Q708830: 'Clarke',
-	Q4836602: 'BSFA'
+	Q4836602: 'BSFA',
+	Q2576795: 'Locus SF',
+	Q607354: 'Locus Fantasy',
+	Q2090893: 'Locus First',
+	Q898527: 'World Fantasy',
+	Q130987259: 'British Fantasy',
+	Q135231200: 'Mythopoeic'
 };
 
 const awardValues = Object.keys(AWARDS)

@@ -26,8 +26,10 @@ a { color: var(--primary); }
 
 .badge { display: inline-block; padding: 2px var(--s-3); border-radius: var(--r-pill); font-size: var(--fs-14); font-weight: 700; border: 2px solid var(--award); color: var(--text); }
 .badge--won { background: var(--award); color: #fff; }
-.badge--hugo { --award: var(--hugo); } .badge--nebula { --award: var(--nebula); }
-.badge--clarke { --award: var(--clarke); } .badge--bsfa { --award: var(--bsfa); }
+.badge--hugo, .badge--locus-first { --award: var(--hugo); }
+.badge--nebula, .badge--locus-fantasy, .badge--world-fantasy { --award: var(--nebula); }
+.badge--clarke, .badge--locus-sf { --award: var(--clarke); }
+.badge--bsfa, .badge--british-fantasy, .badge--mythopoeic { --award: var(--bsfa); }
 
 .button { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--s-4); border-radius: var(--r-control); font: 600 var(--fs-16) var(--font); text-decoration: none; cursor: pointer; border: 2px solid var(--primary); }
 .button--primary { background: var(--primary); color: var(--on-primary); }

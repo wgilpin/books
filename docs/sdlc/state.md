@@ -47,7 +47,7 @@ Updated: 2026-10-17
   - [x] epic-01-marks — merged 2026-10-02
   - [x] epic-02-queue — merged 2026-10-02
 - [ ] 07-broader-recommendations — in progress
-  - [ ] epic-01-more-awards — pending
+  - [x] epic-01-more-awards — reviewed 2026-10-17
   - [ ] epic-02-award-ranking — pending
 
 ## Notes for a fresh session

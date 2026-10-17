@@ -21,13 +21,22 @@ describe('classifyGenre', () => {
 		expect(classifyGenre(['science fiction', 'fantasy'], noAwards)).toEqual({ sf: true, fantasy: true });
 	});
 
-	it('counts a Clarke entry as science fiction when no label says so', () => {
+	it('counts a Clarke or Locus SF entry as science fiction when no label says so', () => {
 		expect(classifyGenre([], [{ award: 'Clarke' }])).toEqual({ sf: true, fantasy: false });
+		expect(classifyGenre([], [{ award: 'Locus SF' }])).toEqual({ sf: true, fantasy: false });
 		expect(classifyGenre(['fantasy'], [{ award: 'Clarke' }])).toEqual({ sf: true, fantasy: true });
 	});
 
+	it.each(['Locus Fantasy', 'World Fantasy', 'British Fantasy', 'Mythopoeic'])(
+		'counts a %s entry as fantasy when no label says so',
+		(award) => {
+			expect(classifyGenre([], [{ award }])).toEqual({ sf: false, fantasy: true });
+		}
+	);
+
 	it('leaves the genre unknown with no label, or only other genres', () => {
 		expect(classifyGenre([], [{ award: 'Hugo' }])).toEqual({ sf: false, fantasy: false });
+		expect(classifyGenre([], [{ award: 'Locus First' }])).toEqual({ sf: false, fantasy: false });
 		expect(classifyGenre(['horror fiction', 'kaiju'], [{ award: 'Nebula' }])).toEqual({ sf: false, fantasy: false });
 	});
 });
