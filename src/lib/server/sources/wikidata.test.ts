@@ -55,6 +55,35 @@ describe('parseAwardNovels', () => {
 	it('skips an award row with no year', () => {
 		expect(records.awards.every((a) => Number.isInteger(a.year))).toBe(true);
 	});
+
+	it('queries and parses Locus SF, Locus Fantasy, Locus First, World Fantasy, British Fantasy and Mythopoeic awards', () => {
+		const added: [string, string][] = [
+			['Q2576795', 'Locus SF'],
+			['Q607354', 'Locus Fantasy'],
+			['Q2090893', 'Locus First'],
+			['Q898527', 'World Fantasy'],
+			['Q130987259', 'British Fantasy'],
+			['Q135231200', 'Mythopoeic']
+		];
+		for (const [qid] of added) {
+			expect(AWARD_NOVELS_QUERY).toContain(`wd:${qid}`);
+		}
+		const body = JSON.stringify({
+			results: {
+				bindings: added.map(([qid], i) => ({
+					award: { value: `http://www.wikidata.org/entity/${qid}` },
+					book: { value: `http://www.wikidata.org/entity/Q90${i}` },
+					bookLabel: { value: `Book ${i}` },
+					authorLabel: { value: 'Ann Author' },
+					prop: { value: i % 2 === 0 ? 'won' : 'nominated' },
+					year: { value: '2024' }
+				}))
+			}
+		});
+		expect(parseAwardNovels(body).awards.map((a) => [a.award, a.result])).toEqual(
+			added.map(([, name], i) => [name, i % 2 === 0 ? 'won' : 'shortlisted'])
+		);
+	});
 });
 
 describe('labels and aliases', () => {

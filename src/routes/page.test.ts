@@ -60,7 +60,8 @@ describe('/ page design', () => {
 		...book,
 		awards: [
 			{ award: 'Hugo', year: 2024, result: 'won' },
-			{ award: 'Nebula', year: 2024, result: 'shortlisted' }
+			{ award: 'Nebula', year: 2024, result: 'shortlisted' },
+			{ award: 'Locus SF', year: 2024, result: 'shortlisted' }
 		]
 	};
 	const ok = { status: 'ok', finishedAt: '2026-10-02 21:00:00', error: null };
@@ -69,6 +70,7 @@ describe('/ page design', () => {
 		const body = page({ books: [twoAwards], refresh: ok });
 		expect(body).toMatch(/<span class="badge badge--hugo badge--won"[^>]*>Hugo 2024 · won<\/span>/);
 		expect(body).toMatch(/<span class="badge badge--nebula"[^>]*>Nebula 2024<\/span>/);
+		expect(body).toMatch(/<span class="badge badge--locus-sf"[^>]*>Locus SF 2024<\/span>/);
 	});
 
 	it('puts the title link, author, a primary Kindle link and a secondary I own this button in a card', () => {

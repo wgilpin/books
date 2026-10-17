@@ -1,5 +1,15 @@
 /** Plain records a source returns. Every record carries its source and the source's own id. */
-export type Award = 'Hugo' | 'Nebula' | 'Clarke' | 'BSFA';
+export type Award =
+	| 'Hugo'
+	| 'Nebula'
+	| 'Clarke'
+	| 'BSFA'
+	| 'Locus SF'
+	| 'Locus Fantasy'
+	| 'Locus First'
+	| 'World Fantasy'
+	| 'British Fantasy'
+	| 'Mythopoeic';
 
 export interface WorkRecord {
 	source: string;

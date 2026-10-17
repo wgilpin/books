@@ -8,11 +8,14 @@ export interface Genre {
 	fantasy: boolean;
 }
 
-/** Neither flag set means the genre is unknown. The Clarke award is for science fiction only. */
+const SF_AWARDS = new Set(['Clarke', 'Locus SF']);
+const FANTASY_AWARDS = new Set(['Locus Fantasy', 'World Fantasy', 'British Fantasy', 'Mythopoeic']);
+
+/** Neither flag set means the genre is unknown. Genre-specific awards classify the book directly. */
 export function classifyGenre(labels: string[], awards: { award: string }[]): Genre {
 	const text = labels.map((label) => label.toLowerCase());
 	return {
-		sf: text.some((label) => SCIENCE_FICTION.test(label)) || awards.some((a) => a.award === 'Clarke'),
-		fantasy: text.some((label) => FANTASY.test(label))
+		sf: text.some((label) => SCIENCE_FICTION.test(label)) || awards.some((a) => SF_AWARDS.has(a.award)),
+		fantasy: text.some((label) => FANTASY.test(label)) || awards.some((a) => FANTASY_AWARDS.has(a.award))
 	};
 }
