@@ -6,7 +6,7 @@ RUN apk add --no-cache python3 make g++ && npm install -g pnpm@12.8.1
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-ARG APP_ORIGIN=http://localhost:3000
+ARG APP_ORIGIN=https://books.teleosis.ai
 ENV APP_ORIGIN=${APP_ORIGIN}
 RUN pnpm build && pnpm prune --prod
 

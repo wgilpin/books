@@ -11,6 +11,10 @@ services:
       - .env
     volumes:
       - books-data:/app/data
+    # Caddy reaches the app by container name on this shared network.
+    networks:
+      - web-routing
+      - default
 
   backup:
     image: books-app
@@ -26,3 +30,9 @@ services:
 volumes:
   books-data:
     name: books-data
+
+# The shared network the Caddy reverse proxy lives on. Caddy routes
+# books.teleosis.ai to books-app through dynamic upstreams. See docs/deploy.md.
+networks:
+  web-routing:
+    external: true

@@ -7,10 +7,10 @@ import { actions } from './+page.server';
 
 type Set = { name: string; value: string; options: Record<string, unknown> };
 
-async function login(password: string | null) {
+async function login(password: string | null, host = 'localhost:3000') {
 	const form = new FormData();
 	if (password !== null) form.set('password', password);
-	const request = new Request('http://localhost:3000/login', { method: 'POST', body: form });
+	const request = new Request('http://localhost:3000/login', { method: 'POST', body: form, headers: { host } });
 	const set: Set[] = [];
 	const cookies = { set: (name: string, value: string, options: Record<string, unknown>) => set.push({ name, value, options }) };
 	let result: any;
@@ -73,5 +73,19 @@ describe('/login throttle', () => {
 	it('logs in after four wrong passwords', async () => {
 		for (let i = 0; i < 4; i++) await login('wrong');
 		expect((await login(TEST_PASSWORD)).result).toMatchObject({ status: 303, location: '/' });
+	});
+});
+
+describe('/login Secure flag', () => {
+	beforeEach(() => loginThrottle.reset());
+
+	it('marks the cookie Secure for the public host', async () => {
+		const { set } = await login(TEST_PASSWORD, 'books.teleosis.ai');
+		expect(set[0].options).toMatchObject({ secure: true, httpOnly: true, sameSite: 'lax' });
+	});
+
+	it.each(['localhost:3000', 'localhost', '127.0.0.1:3000'])('leaves Secure off for %s', async (host) => {
+		const { set } = await login(TEST_PASSWORD, host);
+		expect(set[0].options).toMatchObject({ secure: false });
 	});
 });
