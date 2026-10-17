@@ -104,7 +104,16 @@ export function buildEntries({
 		groups.set(groupKey, group);
 	}
 
-	const ordered = [...groups.values()].sort((a, b) => b.newest - a.newest || a.sortTitle.localeCompare(b.sortTitle));
+	const awardCount = (group: Group) => group.books.reduce((n, book) => n + book.awards.length, 0);
+	const winCount = (group: Group) =>
+		group.books.reduce((n, book) => n + book.awards.filter((a) => a.result === 'won').length, 0);
+	const ordered = [...groups.values()].sort(
+		(a, b) =>
+			b.newest - a.newest ||
+			awardCount(b) - awardCount(a) ||
+			winCount(b) - winCount(a) ||
+			a.sortTitle.localeCompare(b.sortTitle)
+	);
 	const entries: Entry[] = [];
 	for (const group of ordered) {
 		if (entries.length >= limit) break;

@@ -46,9 +46,9 @@ Updated: 2026-10-17
 - [x] 05-triage — done
   - [x] epic-01-marks — merged 2026-10-02
   - [x] epic-02-queue — merged 2026-10-02
-- [ ] 07-broader-recommendations — in progress
-  - [x] epic-01-more-awards — reviewed 2026-10-17
-  - [ ] epic-02-award-ranking — pending
+- [x] 07-broader-recommendations — done
+  - [x] epic-01-more-awards — merged 2026-10-17
+  - [x] epic-02-award-ranking — merged 2026-10-17
 
 ## Notes for a fresh session
 

@@ -45,3 +45,68 @@ UI sort controls or filters beyond genre and unknown-genre.
 
 Count awards and wins from the group's award books so series entries sum the
 awards of their award books.
+
+---
+
+## Build note — 2026-10-17
+
+**Result:** green
+
+### Tasks done
+
+1. Wrote failing tests in `src/lib/discover.test.ts` and
+   `src/routes/page.server.test.ts` for same-year award-weight and win-count
+   tie-breaking on standalone and series entries.
+2. Updated `buildEntries` in `src/lib/discover.ts` to sort groups by newest
+   award year descending, then total award count descending, then win count
+   descending, then title alphabetically.
+
+### Tests added
+
+- `src/lib/discover.test.ts` — orders books in the same year by award count,
+  then win count, then title; orders a series entry ahead of a standalone book
+  in the same year when the series has more awards.
+- `src/routes/page.server.test.ts` — `/ load` asserts that 2024 entries sort by
+  award count descending with multi-award books first.
+
+### Suite result
+
+`pnpm test` — `Test Files 22 passed (22)`, `Tests 200 passed (200)`.
+`pnpm check` — `svelte-check found 0 errors and 0 warnings`.
+
+### Deviations from the plan
+
+None.
+
+### Follow-ups
+
+None.
+
+---
+
+## Review — 2026-10-17
+
+**Verdict:** pass
+
+### Acceptance criteria
+
+| AC | Met | Proved by |
+|---|---|---|
+| AC-1 | yes | `discover.test.ts` — orders books in the same year by award count, then win count, then title; `page.server.test.ts` — `/ load` sorts 2024 entries by award count |
+| AC-2 | yes | `discover.test.ts` — orders a series entry ahead of a standalone book in the same year when the series has more awards |
+| AC-3 | yes | `discover.test.ts` — orders books in the same year by award count, then win count, then title (`Alpha` before `Delta`, and 2024 entries before 2023 `Older Hit`) |
+
+Suite run for review: `pnpm test` — `Test Files 22 passed (22)`, `Tests 200 passed (200)`.
+
+### Drift
+
+None. `discover.ts` remains pure and newest award year remains the primary sort
+key.
+
+### Findings
+
+- None that change behaviour.
+
+### Follow-ups
+
+None.
