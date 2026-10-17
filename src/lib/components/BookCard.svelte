@@ -54,7 +54,19 @@
 	const coverSrc = $derived(
 		`/cover/${encodeURIComponent(book.source)}/${encodeURIComponent(book.sourceId)}?title=${encodeURIComponent(book.title)}`
 	);
+
+	let menu = $state<HTMLDetailsElement>();
+
+	/** Close the More menu on a click outside it or on Escape. */
+	function closeMenu(event: Event) {
+		if (!menu?.open) return;
+		if (event instanceof KeyboardEvent ? event.key === 'Escape' : !menu.contains(event.target as Node)) {
+			menu.open = false;
+		}
+	}
 </script>
+
+<svelte:document onclick={closeMenu} onkeydown={closeMenu} />
 
 {#snippet genreForm()}
 	<form class="card__genre" method="POST" action={genreAction}>
@@ -110,7 +122,7 @@
 				</form>
 			{/if}
 			{#if menuMarks.length || (canSetGenre && !unknownGenre)}
-				<details class="menu">
+				<details class="menu" bind:this={menu}>
 					<summary class="icon-button" aria-label="More actions for {book.title}" title="More"><Icon name="more" /></summary>
 					<div class="menu__panel">
 						{#if menuMarks.length}
