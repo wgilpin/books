@@ -195,3 +195,47 @@ describe('buildEntries award keys', () => {
 		]);
 	});
 });
+
+describe('buildEntries award ranking', () => {
+	it('orders books in the same year by award count, then win count, then title', () => {
+		const bookA = award(work('QA', 'Alpha'), 2024, 'shortlisted', 'Hugo');
+		const bookB = award(work('QB', 'Bravo'), 2024, 'won', 'Hugo');
+		const bookC: AwardBookInput = {
+			...work('QC', 'Charlie'),
+			awards: [
+				{ award: 'Hugo', year: 2024, result: 'shortlisted' },
+				{ award: 'Nebula', year: 2024, result: 'shortlisted' },
+				{ award: 'Clarke', year: 2024, result: 'shortlisted' }
+			],
+			genre: UNKNOWN
+		};
+		const bookD = award(work('QD', 'Delta'), 2024, 'shortlisted', 'Nebula');
+		const olderMany: AwardBookInput = {
+			...work('QO', 'Older Hit'),
+			awards: [
+				{ award: 'Hugo', year: 2023, result: 'won' },
+				{ award: 'Nebula', year: 2023, result: 'won' },
+				{ award: 'Clarke', year: 2023, result: 'won' },
+				{ award: 'BSFA', year: 2023, result: 'won' }
+			],
+			genre: UNKNOWN
+		};
+
+		const entries = buildEntries({
+			awardBooks: [bookA, bookB, bookC, bookD, olderMany],
+			members: [],
+			markOf: ownsIds()
+		});
+		expect(entries.map((e) => e.title)).toEqual(['Charlie', 'Bravo', 'Alpha', 'Delta', 'Older Hit']);
+	});
+
+	it('orders a series entry ahead of a standalone book in the same year when the series has more awards', () => {
+		const lone = award(work('QL', 'aardvark'), 2024, 'won', 'Hugo');
+		const entries = buildEntries({
+			awardBooks: [lone, award(b3, 2023, 'shortlisted', 'Nebula'), award(b4, 2024, 'shortlisted', 'Hugo')],
+			members: saga,
+			markOf: ownsIds()
+		});
+		expect(entries.map((e) => e.title)).toEqual(['One', 'aardvark']);
+	});
+});

@@ -32,13 +32,16 @@ describe('/ load', () => {
 		const years = books.map((b: any) => Math.max(...b.awards.map((a: any) => a.year)));
 		expect(years).toEqual([...years].sort((a, b) => b - a));
 		expect(years.every((y: number) => y === 2024)).toBe(true);
+		const counts = books.map((b: any) => b.awards.length);
+		expect(counts).toEqual([...counts].sort((a, b) => b - a));
+		expect(books[0].awards.length).toBeGreaterThan(1);
 		expect(books[0]).toEqual({
 			source: 'wikidata',
 			sourceId: expect.stringMatching(/^Q\d+$/),
 			title: expect.any(String),
 			author: expect.any(String),
 			kindleUrl: expect.stringMatching(/^https:\/\/www\.amazon\.co\.uk\/s\?k=.+&i=digital-text$/),
-			awards: [expect.objectContaining({ year: 2024 })],
+			awards: expect.arrayContaining([expect.objectContaining({ year: 2024 })]),
 			series: null,
 			genre: { sf: expect.any(Boolean), fantasy: expect.any(Boolean) },
 			awardBooks: [{ source: 'wikidata', sourceId: expect.stringMatching(/^Q\d+$/) }]
