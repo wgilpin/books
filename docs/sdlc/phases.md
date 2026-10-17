@@ -104,3 +104,23 @@ rejected books never come back. Queued books show in their own list.
 **Size:** about 1 to 2 hours.
 
 **Depends on:** phase 03.
+
+## Phase 07 — Broader recommendations
+
+Added 2026-10-17, after phase 05.
+
+**Goal:** Widen the pool with Locus and fantasy awards from Wikidata and rank
+same-year entries by award weight.
+
+**Works after this phase:** A refresh pulls Locus (SF, Fantasy, First Novel),
+World Fantasy, British Fantasy (Holdstock) and Mythopoeic shortlists alongside
+Hugo, Nebula, Clarke and BSFA, classifies their genres, and ranks same-year
+entries by award count and wins before title.
+
+**Not in this phase:** a second data source outside Wikidata, ratings, or
+personalised similarity.
+
+**Size:** about 1 hour.
+
+**Depends on:** phase 05, phase 06.
+

@@ -128,3 +128,53 @@ default, that leaves out "genre unknown" books when off.
 **Lands in:** fix on branch `fix-show-more`, proved by `page.server.test.ts` "lists twenty for ?limit=20, the first ten unchanged" and `page.test.ts` "links to ten more" 
 
 The user wants a "Show more" button under the list. `/` always lists ten.
+
+## ISS-15 — The Login page gives the queue count to a visitor with no session
+
+**Raised:** 2026-10-04
+**Status:** open
+**Lands in:** unplanned
+
+From the epic-01-password-gate review. `src/routes/+layout.server.ts` runs on
+`/login`, so `queueCount` is in the page data and in `/login/__data.json`.
+
+## ISS-16 — A card with a known genre has no controls to change it when Wikidata got the genre wrong
+
+**Raised:** 2026-10-15
+**Status:** fixed 2026-10-15
+**Lands in:** fix on branch `epic-03-public-route`, proved by `page.test.ts` "offers Science fiction, Fantasy and Both on every card, with the current genre disabled (ISS-16)"
+
+From epic-03-genre-override. `BookCard.svelte` hides the `Set genre:` form when
+`unknownGenre` is false, so a fantasy book tagged as science fiction by Wikidata cannot be corrected.
+
+## ISS-17 — SF Masterworks and Fantasy Masterworks have no book links on Wikidata
+
+**Raised:** 2026-10-17
+**Status:** open
+**Lands in:** unplanned
+
+From phase 07 planning. `wd:Q7390023` (SF Masterworks) and `wd:Q5434314`
+(Fantasy Masterworks) have no `P179` book statements on Wikidata, so ingesting
+them needs a second source (such as Wikipedia's list articles) or a curated
+seed list.
+
+## ISS-18 — Award statements with no `pq:P585` date qualifier are skipped instead of falling back to publication year
+
+**Raised:** 2026-10-17
+**Status:** open
+**Lands in:** unplanned
+
+From phase 07 planning. `parseAwardNovels` in `src/lib/server/sources/wikidata.ts`
+drops rows without `pq:P585` rather than falling back to `wdt:P577` (affects 3
+rows across the current Wikidata award pool).
+
+## ISS-19 — John W. Campbell Memorial, Philip K. Dick and Dragon awards are not included in the Wikidata query
+
+**Raised:** 2026-10-17
+**Status:** open
+**Lands in:** unplanned
+
+From phase 07 planning. Wikidata has complete novel shortlists and winners for
+Campbell (`Q1030402`), Philip K. Dick (`Q1341487`), Dragon SF (`Q139965311`) and
+Dragon Fantasy (`Q139973536`), which are not yet in `AWARDS` in
+`src/lib/server/sources/wikidata.ts`.
