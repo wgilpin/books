@@ -184,14 +184,18 @@ describe('/ page genre override and include unknown', () => {
 	const unknown = { ...book, genre: { sf: false, fantasy: false }, awardBooks: [{ source: 'wikidata', sourceId: 'Q133510892' }] };
 	const known = { ...unknown, genre: { sf: true, fantasy: false } };
 
-	it('offers Science fiction, Fantasy and Both on an unknown-genre card only', () => {
+	it('offers Science fiction, Fantasy and Both on every card, with the current genre disabled (ISS-16)', () => {
 		const body = page({ books: [unknown], refresh: null, genre: null, includeUnknown: true });
 		expect(body).toContain('action="?/genre"');
 		expect(body).toContain('name="work" value="wikidata|Q133510892"');
 		for (const [value, label] of [['sf', 'Science fiction'], ['fantasy', 'Fantasy'], ['both', 'Both']]) {
 			expect(body).toMatch(new RegExp(`<button [^>]*name="genre"[^>]*value="${value}"[^>]*aria-label="Set Venomous Lumpsucker as ${label}"`));
 		}
-		expect(page({ books: [known], refresh: null, genre: null, includeUnknown: true })).not.toContain('?/genre');
+		const knownBody = page({ books: [known], refresh: null, genre: null, includeUnknown: true });
+		expect(knownBody).toContain('action="?/genre"');
+		expect(knownBody).toMatch(/<button [^>]*name="genre"[^>]*value="sf"[^>]*disabled/);
+		expect(knownBody).toMatch(/<button (?![^>]*disabled)[^>]*name="genre"[^>]*value="fantasy"/);
+		expect(knownBody).toMatch(/<button (?![^>]*disabled)[^>]*name="genre"[^>]*value="both"/);
 	});
 
 	it('shows Include unknown as on by default, and the toggle keeps the genre', () => {

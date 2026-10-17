@@ -39,6 +39,9 @@
 		...new Set(book.awards.map((a) => a.bookTitle).filter((t): t is string => !!t && t !== book.title))
 	]);
 	const unknownGenre = $derived(!!book.genre && !book.genre.sf && !book.genre.fantasy);
+	const currentGenre = $derived(
+		!book.genre ? null : book.genre.sf && book.genre.fantasy ? 'both' : book.genre.sf ? 'sf' : book.genre.fantasy ? 'fantasy' : null
+	);
 </script>
 
 <article class="card">
@@ -54,14 +57,14 @@
 			{/if}
 		</div>
 	{/if}
-	{#if unknownGenre && genreAction && book.awardBooks?.length}
+	{#if genreAction && book.awardBooks?.length}
 		<form class="card__genre" method="POST" action={genreAction}>
 			<span class="help">Set genre:</span>
 			{#each book.awardBooks as key (key.source + key.sourceId)}
 				<input type="hidden" name="work" value="{key.source}|{key.sourceId}" />
 			{/each}
 			{#each GENRE_BUTTONS as choice (choice.value)}
-				<button class="button button--quiet button--small" type="submit" name="genre" value={choice.value} aria-label="Set {book.title} as {choice.label}">{choice.label}</button>
+				<button class="button button--quiet button--small" type="submit" name="genre" value={choice.value} disabled={choice.value === currentGenre} aria-label="Set {book.title} as {choice.label}">{choice.label}</button>
 			{/each}
 		</form>
 	{/if}
