@@ -11,7 +11,9 @@
 
 ## Constraints
 
-- One user. About 2,300 owned books and a few hundred award novels.
+- Two users (me and my daughter), identified by which of the two env-var
+  passwords was entered on `/login`. About 2,300 owned books per user and a few
+  hundred award novels.
 - Runs in OrbStack on my Mac. v1 is reachable on `localhost` only. Internet
   exposure through the existing Caddy proxy and Cloudflare tunnel comes later,
   together with a login.
@@ -77,17 +79,18 @@ The seams are the pure modules and the source interface. `sources` and
 
 Every row from a source carries `source` and `source_id`, unique together. A
 refresh upserts on that pair, so internal ids stay stable across refreshes.
+Award, series, cover and genre-override rows are shared; `owned`, `owned_import`
+and `book_mark` rows carry a `user` key (`'1'` or `'2'`).
 
 - **work** — id, source, source_id, title, author, year, and variant titles.
 - **award_entry** — work, award, year, result (`won` or `shortlisted`),
   source, source_id.
 - **series** and **series_entry** — a series, and each work in it with its
   position.
-- **owned** — one row per Kindle book: ASIN, raw title, raw author, and the
-  matched work when one exists. An import replaces the whole table.
-- **owned_override** — works I ticked as "I own this", keyed by source and
-  source_id so it survives a rebuild. It survives every import. This is the only
-  data that cannot be rebuilt.
+- **owned** — one row per Kindle book per user: user, ASIN, raw title, raw
+  author. An import replaces that user's rows only.
+- **book_mark** — works a user marked (`owned`, `read`, `rejected`, `queued`),
+  keyed by user, source and source_id so it survives a rebuild and every import.
 - **source_cache** — source, query, fetched time, raw response.
 
 ## Key decisions
@@ -99,8 +102,9 @@ refresh upserts on that pair, so internal ids stay stable across refreshes.
   normalise cleanly. Titles are cut at the first colon or bracket, then
   compared. A missed match shows an owned book, and the checkbox fixes it. A
   false match hides a book I want, with no sign. So the match must stay strict.
-- **No login in v1.** It is reachable on `localhost` only. The env-var password
-  and a signed cookie come with internet exposure.
+- **Password-only login for two users.** `APP_PASSWORD` logs in user `'1'` and
+  `APP_PASSWORD_2` logs in user `'2'`, with a signed session cookie carrying the
+  user id and expiry. No username field, logout button or user switcher.
 - **Refresh runs inside the app**, not as a host script. The database lives in
   the container's volume. A host process writing the same SQLite file across
   the OrbStack VM boundary risks lock trouble.

@@ -49,6 +49,9 @@ Updated: 2026-10-17
 - [x] 07-broader-recommendations — done
   - [x] epic-01-more-awards — merged 2026-10-17
   - [x] epic-02-award-ranking — merged 2026-10-17
+- [x] 08-second-user — done
+  - [x] epic-01-user-sessions — merged 2026-10-18
+  - [x] epic-02-user-isolation — merged 2026-10-18
 
 ## Notes for a fresh session
 

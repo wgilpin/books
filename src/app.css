@@ -127,3 +127,6 @@ li[id^='book-'] { scroll-margin-top: var(--s-4); }
 .picker input[type='file'] { font: inherit; }
 .picker input[type='file']::file-selector-button { margin-right: var(--s-3); padding: var(--s-2) var(--s-4); border: 1px solid var(--primary); border-radius: var(--r-control); background: transparent; color: var(--primary); font: 600 var(--fs-16) var(--font); cursor: pointer; }
 .picker input[type='password'] { min-height: 40px; padding: 0 var(--s-3); border: 1px solid var(--border-strong); border-radius: var(--r-control); background: var(--surface); color: var(--text); font: inherit; }
+.instructions h2 { margin: 0; font: 600 var(--fs-22)/1.2 var(--font-serif); }
+.steps { display: grid; gap: var(--s-3); margin: 0; padding-left: var(--s-5); font-size: var(--fs-14); }
+.code { margin: var(--s-2) 0 0; padding: var(--s-3); border: 1px solid var(--border); border-radius: var(--r-control); background: var(--bg); font-size: var(--fs-13); overflow-x: auto; }

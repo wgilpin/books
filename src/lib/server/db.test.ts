@@ -72,3 +72,49 @@ describe('migration 007', () => {
 		void Database;
 	});
 });
+
+describe('migration 009', () => {
+	let dir: string | undefined;
+	afterEach(() => dir && rmSync(dir, { recursive: true, force: true }));
+
+	it('scopes owned, owned_import and book_mark by user, keeping existing rows under user 1', () => {
+		dir = mkdtempSync(join(tmpdir(), 'books-db-'));
+		const path = join(dir, 'books.db');
+		const db = openDb(path);
+		// Put the three tables back to their pre-009 shape with one row each.
+		db.exec(
+			"DROP TABLE owned; DROP TABLE owned_import; DROP TABLE book_mark; DELETE FROM schema_migrations WHERE name = '009_user_scope.sql';"
+		);
+		db.exec(
+			'CREATE TABLE owned (id INTEGER PRIMARY KEY, asin TEXT NOT NULL UNIQUE, title TEXT NOT NULL, authors TEXT NOT NULL);'
+		);
+		db.exec('CREATE TABLE owned_import (id INTEGER PRIMARY KEY, imported_at TEXT NOT NULL, count INTEGER NOT NULL);');
+		db.exec(
+			"CREATE TABLE book_mark (source TEXT NOT NULL, source_id TEXT NOT NULL, mark TEXT NOT NULL CHECK (mark IN ('owned', 'read', 'rejected', 'queued')), marked_at TEXT NOT NULL, PRIMARY KEY (source, source_id));"
+		);
+		db.exec("INSERT INTO owned (asin, title, authors) VALUES ('B01', 'Ancillary Justice', 'Leckie, Ann')");
+		db.exec("INSERT INTO owned_import (imported_at, count) VALUES ('2026-10-02 10:00:00', 1)");
+		db.exec("INSERT INTO book_mark (source, source_id, mark, marked_at) VALUES ('wikidata', 'Q42', 'queued', '2026-10-02 11:00:00')");
+		db.close();
+
+		const migrated = openDb(path);
+		expect(migrated.prepare('SELECT user, asin, title FROM owned').all()).toEqual([
+			{ user: '1', asin: 'B01', title: 'Ancillary Justice' }
+		]);
+		expect(migrated.prepare('SELECT user, count FROM owned_import').all()).toEqual([{ user: '1', count: 1 }]);
+		expect(migrated.prepare('SELECT user, source, source_id, mark FROM book_mark').all()).toEqual([
+			{ user: '1', source: 'wikidata', source_id: 'Q42', mark: 'queued' }
+		]);
+
+		// User 2 can store the same ASIN and the same work without conflict.
+		migrated.exec("INSERT INTO owned (user, asin, title, authors) VALUES ('2', 'B01', 'Ancillary Justice', 'Leckie, Ann')");
+		migrated.exec(
+			"INSERT INTO book_mark (user, source, source_id, mark, marked_at) VALUES ('2', 'wikidata', 'Q42', 'read', '2026-10-18 12:00:00')"
+		);
+		expect(migrated.prepare('SELECT user, mark FROM book_mark ORDER BY user').all()).toEqual([
+			{ user: '1', mark: 'queued' },
+			{ user: '2', mark: 'read' }
+		]);
+		migrated.close();
+	});
+});

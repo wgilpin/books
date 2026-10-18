@@ -1,6 +1,6 @@
 import { isRedirect } from '@sveltejs/kit';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { TEST_PASSWORD, TEST_SECRET } from '../../../tests/setup-env';
+import { TEST_PASSWORD, TEST_PASSWORD_2, TEST_SECRET } from '../../../tests/setup-env';
 import { verifySession } from '#lib/server/session.js';
 import { loginThrottle } from '#lib/server/throttle.js';
 import { actions } from './+page.server';
@@ -25,15 +25,20 @@ async function login(password: string | null, host = 'localhost:3000') {
 describe('/login', () => {
 	beforeEach(() => loginThrottle.reset());
 
-	it('sets a 30-day HttpOnly session cookie and goes to the list for the right password', async () => {
-		const { result, set } = await login(TEST_PASSWORD);
+	it('sets a 30-day HttpOnly session cookie for user 1 or user 2 and goes to the list', async () => {
+		for (const [pw, expectedUser] of [
+			[TEST_PASSWORD, '1'],
+			[TEST_PASSWORD_2, '2']
+		] as const) {
+			const { result, set } = await login(pw);
 
-		expect(isRedirect(result)).toBe(true);
-		expect(result).toMatchObject({ status: 303, location: '/' });
-		expect(set).toHaveLength(1);
-		expect(set[0].name).toBe('session');
-		expect(verifySession(set[0].value, TEST_SECRET)).toBe(true);
-		expect(set[0].options).toMatchObject({ path: '/', httpOnly: true, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 });
+			expect(isRedirect(result)).toBe(true);
+			expect(result).toMatchObject({ status: 303, location: '/' });
+			expect(set).toHaveLength(1);
+			expect(set[0].name).toBe('session');
+			expect(verifySession(set[0].value, TEST_SECRET)).toBe(expectedUser);
+			expect(set[0].options).toMatchObject({ path: '/', httpOnly: true, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 });
+		}
 	});
 
 	it.each(['wrong', '', null])('says "Wrong password" and sets no cookie for %j', async (password) => {

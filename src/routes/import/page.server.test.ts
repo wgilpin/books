@@ -5,15 +5,17 @@ import { actions, load } from './+page.server';
 
 const sample = readFileSync('tests/fixtures/kindle-sample.csv', 'utf8');
 
-function upload(text: string, name = 'kindle_books.csv') {
+function upload(text: string, name = 'kindle_books.csv', user: '1' | '2' = '1') {
 	const form = new FormData();
 	form.set('file', new File([text], name, { type: 'text/csv' }));
 	const request = new Request('http://localhost:3000/import', { method: 'POST', body: form });
-	return actions.default({ request } as Parameters<typeof actions.default>[0]) as Promise<any>;
+	return actions.default({ request, locals: { user } } as unknown as Parameters<typeof actions.default>[0]) as Promise<any>;
 }
 
-const asins = () => getDb().prepare('SELECT asin FROM owned ORDER BY asin').pluck().all();
-const loadImport = () => load({} as Parameters<typeof load>[0]) as Promise<any>;
+const asins = (user: '1' | '2' = '1') =>
+	getDb().prepare('SELECT asin FROM owned WHERE user = ? ORDER BY asin').pluck().all(user);
+const loadImport = (user: '1' | '2' = '1') =>
+	load({ locals: { user } } as unknown as Parameters<typeof load>[0]) as Promise<any>;
 
 describe('/import', () => {
 	beforeEach(() => {
@@ -33,6 +35,20 @@ describe('/import', () => {
 		expect(await loadImport()).toMatchObject({ count: 5, importedAt: expect.any(String) });
 	});
 
+	it('keeps each user owned list and import summary separate (AC-2)', async () => {
+		await upload(sample, 'kindle_books.csv', '1');
+		expect(await loadImport('2')).toEqual({ count: 0, importedAt: null });
+
+		const user2Csv = 'asin,title,author\n"B000000001","Shared ASIN","Author, One"\n"B000000099","Daughter Book","Author, Two"';
+		const result = await upload(user2Csv, 'kindle_books.csv', '2');
+
+		expect(result).toEqual({ imported: 2 });
+		expect(await loadImport('2')).toMatchObject({ count: 2, importedAt: expect.any(String) });
+		expect(asins('2')).toEqual(['B000000001', 'B000000099']);
+		expect(await loadImport('1')).toMatchObject({ count: 5, importedAt: expect.any(String) });
+		expect(asins('1')).toEqual(['B000000001', 'B000000002', 'B000000003', 'B000000004', 'B000000005']);
+	});
+
 	it('rejects a file with the wrong header and keeps the old list', async () => {
 		await upload(sample);
 		const result = await upload('ASIN,Title,Authors\n"B9","x","y"', 'gist.csv');
@@ -44,7 +60,7 @@ describe('/import', () => {
 
 	it('rejects a form with no file', async () => {
 		const request = new Request('http://localhost:3000/import', { method: 'POST', body: new FormData() });
-		const result = (await actions.default({ request } as Parameters<typeof actions.default>[0])) as any;
+		const result = (await actions.default({ request, locals: { user: '1' } } as unknown as Parameters<typeof actions.default>[0])) as any;
 		expect(result.status).toBe(400);
 		expect(result.data).toEqual({ error: 'Choose the kindle_books.csv file first' });
 	});

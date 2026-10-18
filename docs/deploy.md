@@ -16,9 +16,10 @@ cp .env.example .env
 openssl rand -base64 32
 ```
 
-Put the `openssl` output in `SESSION_SECRET`, and the login password in
-`APP_PASSWORD`. `.env` stays out of git and out of the image. The app reads it
-when the container starts, and refuses to start when either value is missing.
+Put the `openssl` output in `SESSION_SECRET`, and the two login passwords in
+`APP_PASSWORD` and `APP_PASSWORD_2`. `.env` stays out of git and out of the
+image. The app reads it when the container starts, and refuses to start when any
+value is missing or when both passwords are the same.
 
 To log every device out, change `SESSION_SECRET` and restart the container.
 There is no log-out button.

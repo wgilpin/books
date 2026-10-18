@@ -48,4 +48,27 @@ describe('/queue', () => {
 
 		expect((await run()).books).toEqual([]);
 	});
+
+	it('lists and marks only the logged-in user queue (AC-4)', async () => {
+		const [first, second] = listAwardBooks(getDb(), 2);
+		markBook(getDb(), first.source, first.sourceId, 'queued', '1');
+		markBook(getDb(), second.source, second.sourceId, 'queued', '2');
+
+		const u1 = await (load({ locals: { user: '1' } } as unknown as Parameters<typeof load>[0]) as Promise<any>);
+		const u2 = await (load({ locals: { user: '2' } } as unknown as Parameters<typeof load>[0]) as Promise<any>);
+		expect(u1.books.map((b: any) => b.title)).toEqual([first.title]);
+		expect(u2.books.map((b: any) => b.title)).toEqual([second.title]);
+
+		const form = new FormData();
+		form.set('source', second.source);
+		form.set('sourceId', second.sourceId);
+		form.set('mark', 'read');
+		await actions.mark({
+			request: new Request('http://localhost:3000/queue?/mark', { method: 'POST', body: form }),
+			locals: { user: '2' }
+		} as any);
+
+		expect(((await load({ locals: { user: '2' } } as any)) as any).books).toEqual([]);
+		expect(((await load({ locals: { user: '1' } } as any)) as any).books.map((b: any) => b.title)).toEqual([first.title]);
+	});
 });

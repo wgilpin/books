@@ -16,6 +16,14 @@ describe('markBook', () => {
 		expect(marksBySource(db).get('wikidata|Q1')).toBe('read');
 	});
 
+	it('keeps marks separate per user', () => {
+		markBook(db, 'wikidata', 'Q1', 'queued', '1');
+		markBook(db, 'wikidata', 'Q1', 'rejected', '2');
+
+		expect(marksBySource(db, '1').get('wikidata|Q1')).toBe('queued');
+		expect(marksBySource(db, '2').get('wikidata|Q1')).toBe('rejected');
+	});
+
 	it('rejects an unknown mark', () => {
 		expect(() => markBook(db, 'wikidata', 'Q1', 'loved' as never)).toThrow();
 	});

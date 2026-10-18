@@ -25,7 +25,15 @@
 		return [asin, title, author];
 	});
 	const blank = rows.filter((row) => !row[1] || !row[2]).length;
-	// copy() is a DevTools console helper.
-	copy(['asin,title,author', ...rows.map((row) => row.map(quote).join(','))].join('\n'));
-	console.log(`${rows.length} books copied, ${blank} missing title or author`);
+	const csv = ['asin,title,author', ...rows.map((row) => row.map(quote).join(','))].join('\n');
+	// Copy to clipboard (DevTools helper) and trigger a file download.
+	if (typeof copy === 'function') copy(csv);
+	const a = Object.assign(document.createElement('a'), {
+		href: URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })),
+		download: 'kindle_books.csv'
+	});
+	document.body.append(a);
+	a.click();
+	a.remove();
+	console.log(`${rows.length} books exported (${blank} missing title or author)`);
 })();

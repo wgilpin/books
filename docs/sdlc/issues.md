@@ -132,8 +132,8 @@ The user wants a "Show more" button under the list. `/` always lists ten.
 ## ISS-15 — The Login page gives the queue count to a visitor with no session
 
 **Raised:** 2026-10-04
-**Status:** open
-**Lands in:** unplanned
+**Status:** fixed 2026-10-18
+**Lands in:** phase 08, epic-01-user-sessions, proved by `layout.server.test.ts` "returns queueCount 0 when locals.user is absent on /login (ISS-15)"
 
 From the epic-01-password-gate review. `src/routes/+layout.server.ts` runs on
 `/login`, so `queueCount` is in the page data and in `/login/__data.json`.

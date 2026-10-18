@@ -124,3 +124,22 @@ personalised similarity.
 
 **Depends on:** phase 05, phase 06.
 
+## Phase 08 — Second user
+
+Added 2026-10-17, after phase 07.
+
+**Goal:** Give my daughter her own password, owned list, marks and queue on the
+same shared Wikidata award catalog, with no UI changes.
+
+**Works after this phase:** Entering `APP_PASSWORD` on `/login` logs into user
+`'1'` (with all existing imported books and marks); entering `APP_PASSWORD_2`
+logs into user `'2'` with an independent owned list, marks and queue. Also
+closes ISS-15 (`/login` no longer queries or leaks `queueCount` when logged out).
+
+**Not in this phase:** a username field, a logout button, a profile switcher,
+a third user, or cross-user visibility.
+
+**Size:** about 1 hour.
+
+**Depends on:** phase 04, phase 05.
+

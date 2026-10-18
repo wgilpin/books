@@ -16,14 +16,14 @@ function limitFrom(url: URL): number {
 }
 type GenreParam = (typeof GENRES)[number];
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, locals }) => {
 	const db = getDb();
 	const param = url.searchParams.get('genre');
 	const genre = GENRES.includes(param as GenreParam) ? (param as GenreParam) : null;
 	const includeUnknown = url.searchParams.get('unknown') !== '0';
 	const limit = limitFrom(url);
 	// One extra entry tells the page whether a "Show more" link has anything to show.
-	const books = listAwardBooks(db, limit + 1, { genre: genre ?? undefined, includeUnknown });
+	const books = listAwardBooks(db, limit + 1, { genre: genre ?? undefined, includeUnknown, user: locals?.user ?? '1' });
 	return {
 		books: books.slice(0, limit),
 		refresh: latestRefresh(db),
@@ -39,6 +39,6 @@ export const actions: Actions = {
 		const { started } = startRefresh(getDb());
 		return { started };
 	},
-	mark: async ({ request }) => markFromForm(getDb(), request),
+	mark: async ({ request, locals }) => markFromForm(getDb(), request, locals?.user ?? '1'),
 	genre: async ({ request }) => genreFromForm(getDb(), request)
 };

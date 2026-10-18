@@ -10,7 +10,11 @@ const isPublic = (path: string) => path === '/login' || path.startsWith('/_app/'
 
 /** Every route except /login needs a session. A form post with no session runs no action. */
 export const handle: Handle = async ({ event, resolve }) => {
+	const user = verifySession(event.cookies.get(SESSION_COOKIE), readAuthConfig().secret);
+	if (user) {
+		event.locals.user = user;
+		return resolve(event);
+	}
 	if (isPublic(event.url.pathname)) return resolve(event);
-	if (verifySession(event.cookies.get(SESSION_COOKIE), readAuthConfig().secret)) return resolve(event);
 	return new Response(null, { status: 303, headers: { location: '/login' } });
 };

@@ -36,3 +36,12 @@ describe('/import page queue link', () => {
 		expect(page({ count: 1, importedAt: 'x', queueCount: 2 })).toMatch(/<a [^>]*href="\/queue"[^>]*>Queue <span class="count">2<\/span><\/a>/);
 	});
 });
+
+describe('/import instructions', () => {
+	it('shows step-by-step instructions and the console script to export kindle_books.csv', () => {
+		const body = page({ count: 0, importedAt: null });
+		expect(body).toContain('https://read.amazon.co.uk/kindle-library');
+		expect(body).toContain('asin,title,author');
+		expect(body).toContain('kindle_books.csv');
+	});
+});

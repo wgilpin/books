@@ -6,13 +6,15 @@ import { handle, init } from './hooks.server';
 function call(path: string, { method = 'GET', cookie }: { method?: string; cookie?: string } = {}) {
 	const url = new URL(path, 'http://localhost:3000');
 	const resolve = vi.fn(async () => new Response('page'));
+	const locals: App.Locals = {};
 	const event = {
 		url,
+		locals,
 		request: new Request(url, { method }),
 		cookies: { get: (name: string) => (name === 'session' ? cookie : undefined) }
 	};
 	const response = handle({ event, resolve } as unknown as Parameters<typeof handle>[0]) as Promise<Response>;
-	return { response, resolve };
+	return { response, resolve, locals };
 }
 
 describe('the password gate', () => {
@@ -30,15 +32,19 @@ describe('the password gate', () => {
 		expect(resolve).not.toHaveBeenCalled();
 	});
 
-	it('lets /login through with no session', async () => {
-		const { response, resolve } = call('/login', { method: 'POST' });
+	it('lets /login through with no session and leaves locals.user unset', async () => {
+		const { response, resolve, locals } = call('/login', { method: 'POST' });
 		expect(await (await response).text()).toBe('page');
 		expect(resolve).toHaveBeenCalledOnce();
+		expect(locals.user).toBeUndefined();
 	});
 
-	it('lets a page through with a valid session', async () => {
-		const { response } = call('/queue', { cookie: signSession(TEST_SECRET) });
-		expect((await response).status).toBe(200);
+	it('lets a page through with a valid session and sets event.locals.user', async () => {
+		for (const user of ['1', '2'] as const) {
+			const { response, locals } = call('/queue', { cookie: signSession(TEST_SECRET, Date.now(), user) });
+			expect((await response).status).toBe(200);
+			expect(locals.user).toBe(user);
+		}
 	});
 
 	it('sends a forged or expired session to /login', async () => {

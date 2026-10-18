@@ -45,7 +45,7 @@ describe('the password stays out of the image', () => {
 				.filter((line) => !line.trim().startsWith('#'))
 				.join('\n');
 		for (const file of ['Dockerfile', 'docker-compose.yml']) {
-			expect(code(file)).not.toMatch(/APP_PASSWORD|SESSION_SECRET/);
+			expect(code(file)).not.toMatch(/APP_PASSWORD|APP_PASSWORD_2|SESSION_SECRET/);
 		}
 	});
 });

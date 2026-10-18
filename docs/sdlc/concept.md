@@ -9,9 +9,8 @@ also does not know where I am in a series.
 
 ## Who it is for
 
-Me alone. I read a lot of speculative fiction and buy it on Kindle UK. Today I
-search the Kindle store directly and wade through the noise. No one else will
-use or install this tool.
+Me and my daughter. We both read speculative fiction and buy it on Kindle UK
+(`amazon.co.uk`). No third user will use or install this tool.
 
 ## The smallest thing that proves it
 
@@ -46,7 +45,7 @@ I stop if either of these is true:
   curation.
 - Buying, prices, or deal alerts. The tool hands off to Amazon and stops.
 - Genres outside speculative fiction.
-- Other users, sharing, or ratings.
+- Users beyond the two of us, cross-user sharing, or ratings.
 - A clean Amazon page. The buy link lands on Amazon search results, so some ads
   and Kindle Unlimited noise remain on that last step.
 - Books read on paper or elsewhere.

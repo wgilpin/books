@@ -289,3 +289,55 @@ describe('show more', () => {
 		expect((await run('?limit=5000')).limit).toBe(200);
 	});
 });
+
+describe('user isolation', () => {
+	beforeEach(async () => {
+		resetDb();
+		await startRefresh(getDb(), okFetch).done;
+	});
+
+	const runAs = (user: '1' | '2', search = '') =>
+		load({ url: new URL(`http://localhost:3000/${search}`), locals: { user } } as unknown as Parameters<typeof load>[0]) as Promise<
+			Record<string, any>
+		>;
+
+	function markAs(user: '1' | '2', book: { source: string; sourceId: string }, value: string) {
+		const form = new FormData();
+		form.set('source', book.source);
+		form.set('sourceId', book.sourceId);
+		form.set('mark', value);
+		const request = new Request('http://localhost:3000/?/mark', { method: 'POST', body: form });
+		return actions.mark({ request, locals: { user } } as unknown as Parameters<typeof actions.mark>[0]) as Promise<any>;
+	}
+
+	it('isolates owned books, marks and series progress between user 1 and user 2', async () => {
+		const [first] = (await runAs('1')).books;
+		replaceOwned(getDb(), [{ asin: 'B1', title: first.title, authors: [lastFirst(first.author)] }], '1');
+
+		const gideon = (await runAs('1', '?limit=200')).books.find((b: any) => b.series?.name === 'Locked Tomb series')!;
+		await markAs('1', gideon, 'read');
+
+		// User 1 no longer sees `first`, and Locked Tomb advances to book 2.
+		const user1Books = (await runAs('1', '?limit=200')).books;
+		expect(user1Books.map((b: any) => b.title)).not.toContain(first.title);
+		expect(user1Books.find((b: any) => b.series?.name === 'Locked Tomb series')).toMatchObject({
+			title: 'Harrow the Ninth',
+			series: { position: 2 }
+		});
+
+		// User 2 still sees `first` and book 1 of Locked Tomb.
+		const user2Books = (await runAs('2', '?limit=200')).books;
+		expect(user2Books.map((b: any) => b.title)).toContain(first.title);
+		expect(user2Books.find((b: any) => b.series?.name === 'Locked Tomb series')).toMatchObject({
+			title: 'Gideon the Ninth',
+			series: { position: 1 }
+		});
+
+		// User 2 rejecting Locked Tomb drops it for user 2 only.
+		await markAs('2', gideon, 'rejected');
+		expect((await runAs('2', '?limit=200')).books.find((b: any) => b.series?.name === 'Locked Tomb series')).toBeUndefined();
+		expect((await runAs('1', '?limit=200')).books.find((b: any) => b.series?.name === 'Locked Tomb series')).toMatchObject({
+			title: 'Harrow the Ninth'
+		});
+	});
+});

@@ -5,6 +5,7 @@ import { ownedIndex, type OwnedBook } from '../match';
 import type { Db } from './db';
 import { genreOverrides } from './genres';
 import { marksBySource } from './marks';
+import type { UserId } from './session';
 
 export type AwardBook = Entry & { kindleUrl: string };
 
@@ -15,7 +16,7 @@ export type AwardBook = Entry & { kindleUrl: string };
 export function listAwardBooks(
 	db: Db,
 	limit = 10,
-	{ genre, includeUnknown = true }: { genre?: GenreFilter; includeUnknown?: boolean } = {}
+	{ genre, includeUnknown = true, user = '1' }: { genre?: GenreFilter; includeUnknown?: boolean; user?: UserId } = {}
 ): AwardBook[] {
 	const aliases = new Map<number, string[]>();
 	for (const { work_id, alias } of db.prepare('SELECT work_id, alias FROM work_alias').all() as {
@@ -76,8 +77,8 @@ export function listAwardBooks(
 		})
 	);
 
-	const kindle = ownedIndex(db.prepare('SELECT title, authors FROM owned').all() as OwnedBook[]);
-	const marks = marksBySource(db);
+	const kindle = ownedIndex(db.prepare('SELECT title, authors FROM owned WHERE user = ?').all(user) as OwnedBook[]);
+	const marks = marksBySource(db, user);
 
 	return buildEntries({
 		awardBooks: [...awardBooks.values()],

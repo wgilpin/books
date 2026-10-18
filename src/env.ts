@@ -6,6 +6,7 @@ import { defineEnvVars } from '@sveltejs/kit/env';
 const optional = (value: string | undefined) => value;
 
 export const variables = defineEnvVars({
-	APP_PASSWORD: { schema: optional, description: 'The one login password.' },
+	APP_PASSWORD: { schema: optional, description: 'The first login password.' },
+	APP_PASSWORD_2: { schema: optional, description: 'The second login password.' },
 	SESSION_SECRET: { schema: optional, description: 'Signs the session cookie.' }
 });

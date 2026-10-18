@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { loginThrottle } from '#lib/server/throttle.js';
-import { checkPassword, readAuthConfig, SESSION_COOKIE, SESSION_MAX_AGE, signSession } from '#lib/server/session.js';
+import { matchPassword, readAuthConfig, SESSION_COOKIE, SESSION_MAX_AGE, signSession } from '#lib/server/session.js';
 import type { Actions } from './$types';
 
 /** True for the Mac's own addresses, with or without a port. */
@@ -12,15 +12,16 @@ export const actions: Actions = {
 		if (loginThrottle.locked()) return fail(429, { error: 'Too many attempts. Try again later.' });
 
 		const given = (await request.formData()).get('password');
-		const { password, secret } = readAuthConfig();
+		const config = readAuthConfig();
+		const user = typeof given === 'string' ? matchPassword(given, config) : null;
 		// Return the error text only, never the submitted fields.
-		if (typeof given !== 'string' || !checkPassword(given, password)) {
+		if (!user) {
 			loginThrottle.fail();
 			return fail(400, { error: 'Wrong password' });
 		}
 		loginThrottle.succeed();
 
-		cookies.set(SESSION_COOKIE, signSession(secret), {
+		cookies.set(SESSION_COOKIE, signSession(config.secret, Date.now(), user), {
 			path: '/',
 			httpOnly: true,
 			sameSite: 'lax',
