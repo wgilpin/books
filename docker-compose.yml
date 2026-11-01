@@ -4,8 +4,10 @@ services:
     image: books-app
     container_name: books-app
     restart: unless-stopped
-    ports:
-      - '3000:3000'
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     # APP_PASSWORD and SESSION_SECRET. The server refuses to start without them.
     env_file:
       - .env
@@ -20,6 +22,10 @@ services:
     image: books-app
     container_name: books-backup
     restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       - app
     command: ['sh', '/app/scripts/backup/backup.sh']
